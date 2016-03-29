@@ -1,4 +1,4 @@
-This local component introduces a change in the way we manage non standard additional
+This local component introduces a change in the way we maange non standard additional
 librairies needed by plugins from Valery Fremaux (valery.fremaux@gmail.com), lead
 independant Moodle Architect in France.
 
@@ -27,3 +27,7 @@ Antiword : Used by search engine
 
 XPdf : Used by search engine
 
+2015122000
+########################
+
+Adding tcpdf upgraded version for all VF component line

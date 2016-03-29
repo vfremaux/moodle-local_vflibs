@@ -1,6 +1,7 @@
 <?php
 
 $plugins = array(
+        'sparklines' => array('files' => array('sparklines/sparklines.min.js')),
         'jqplotjquery' => array('files' => array('jqplot/jquery.min.js')),
         'jqplot'      => array(
             'files' => array(

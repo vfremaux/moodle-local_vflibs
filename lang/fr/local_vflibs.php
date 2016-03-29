@@ -1,3 +1,3 @@
 <?php
 
-$string['pluginname'] = 'Librairies VF';
+$string['pluginname'] = 'Librairies additionnelles pour les plugins VF (MyLearningFactory)';

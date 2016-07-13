@@ -22,12 +22,12 @@ if (!class_exists('TCPDF')) {
 function tcpdf_decode_html_color($htmlcolor, $reverse = false) {
     if (preg_match('/#([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])/', $htmlcolor, $matches)) {
         $r = hexdec($matches[1]);
-        $v = hexdec($matches[2]);
+        $g = hexdec($matches[2]);
         $b = hexdec($matches[3]);
-        return array($r, $v, $b);
+        return array($r, $g, $b);
     }
     if ($reverse){
-        return array(255,255,255);
+        return array(255 - $r,255 - $g,255 - $b);
     }
     return array(0,0,0);
 }

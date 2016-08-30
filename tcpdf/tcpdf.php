@@ -107,6 +107,8 @@
  * @version 6.0.054
  */
 
+if (!class_exists('TCPDF')) {
+
 // TCPDF configuration
 require_once(dirname(__FILE__).'/tcpdf_autoconfig.php');
 // TCPDF static font methods and data
@@ -24256,3 +24258,5 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 //============================================================+
 // END OF FILE
 //============================================================+
+
+}

@@ -615,3 +615,84 @@ abstract class course_selector_base {
         return $output;
     }
 }
+
+/**
+ * Returns SQL used to search through user table to find users (in a query
+ * which may also join and apply other conditions).
+ *
+ * You can combine this SQL with an existing query by adding 'AND $sql' to the
+ * WHERE clause of your query (where $sql is the first element in the array
+ * returned by this function), and merging in the $params array to the parameters
+ * of your query (where $params is the second element). Your query should use
+ * named parameters such as :param, rather than the question mark style.
+ *
+ * There are examples of basic usage in the unit test for this function.
+ *
+ * @param string $search the text to search for (empty string = find all)
+ * @param string $u the table alias for the user table in the query being
+ *     built. May be ''.
+ * @param bool $searchanywhere If true (default), searches in the middle of
+ *     names, otherwise only searches at start
+ * @param array $extrafields Array of extra user fields to include in search
+ * @param array $exclude Array of user ids to exclude (empty = don't exclude)
+ * @param array $includeonly If specified, only returns users that have ids
+ *     incldued in this array (empty = don't restrict)
+ * @return array an array with two elements, a fragment of SQL to go in the
+ *     where clause the query, and an associative array containing any required
+ *     parameters (using named placeholders).
+ */
+function courses_search_sql($search, $c = 'c', $searchanywhere = true, array $extrafields = array(), array $exclude = null, array $includeonly = null) {
+    global $DB, $CFG;
+
+    $params = array();
+    $tests = array();
+
+    if ($c) {
+        $c .= '.';
+    }
+
+    // If we have a $search string, put a field LIKE '$search%' condition on each field.
+    if ($search) {
+        $conditions = array(
+            $conditions[] = $c . 'fullname'
+        );
+        foreach ($extrafields as $field) {
+            $conditions[] = $c . $field;
+        }
+        if ($searchanywhere) {
+            $searchparam = '%'.$search.'%';
+        } else {
+            $searchparam = $search.'%';
+        }
+        $i = 0;
+        foreach ($conditions as $key => $condition) {
+            $conditions[$key] = $DB->sql_like($condition, ":con{$i}00", false, false);
+            $params["con{$i}00"] = $searchparam;
+            $i++;
+        }
+        $tests[] = '('.implode(' OR ', $conditions).')';
+    }
+
+    // If we are being asked to exclude any users, do that.
+    if (!empty($exclude)) {
+        list($coursetest, $courseparams) = $DB->get_in_or_equal($exclude, SQL_PARAMS_QM, 'ex', false);
+        $tests[] = $c.'id '.$coursetest;
+        $params = array_merge($params, $courseparams);
+    }
+
+    // If we are validating a set list of courseids, add an id IN (...) test.
+    if (!empty($includeonly)) {
+        list($coursesql, $courseparams) = $DB->get_in_or_equal($includeonly, SQL_PARAMS_QM, 'val');
+        $tests[] = $c.'id '.$coursesql;
+        $params = array_merge($params, $courseparams);
+    }
+
+    // In case there are no tests, add one result (this makes it easier to combine
+    // this with an existing query as you can always add AND $sql).
+    if (empty($tests)) {
+        $tests[] = '1 = 1';
+    }
+
+    // Combing the conditions and return.
+    return array(implode(' AND ', $tests), $params);
+}

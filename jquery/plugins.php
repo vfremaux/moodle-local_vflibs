@@ -23,4 +23,38 @@ $plugins = array(
                 'jqplot/plugins/jqplot.donutRenderer.min.js'
             )
         ),
+        'jqwidgets-core' => array(
+            'files' => array(
+                'jqwidgets/jqwidgets/jqxcore.js',
+                'jqwidgets/jqwidgets/jqxdraw.js',
+                'jqwidgets/jqwidgets/styles/jqx.base.css'
+            )
+        ),
+        'jqwidgets-bargauge' => array(
+            'files' => array(
+                'jqwidgets/jqwidgets/jqxbargauge.js'
+            )
+        ),
+        'jqwidgets-progressbar' => array(
+            'files' => array(
+                'jqwidgets/jqwidgets/jqxprogressbar.js'
+            )
+        ),
+        'jqwidgets-core' => array(
+            'files' => array(
+                'jqwidgets/jqwidgets/jqxcore.js',
+                'jqwidgets/jqwidgets/jqxdraw.js',
+                'jqwidgets/jqwidgets/styles/jqx.base.css'
+            )
+        ),
+        'jqwidgets-bargauge' => array(
+            'files' => array(
+                'jqwidgets/jqwidgets/jqxbargauge.js'
+            )
+        ),
+        'jqwidgets-progressbar' => array(
+            'files' => array(
+                'jqwidgets/jqwidgets/jqxprogressbar.js'
+            )
+        )
 );

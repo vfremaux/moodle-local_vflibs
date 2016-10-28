@@ -14,13 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * @package local_vflibs
  * @author valery.fremaux@gmail.com
  * @category local
  */
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Implements a google maps API V3 wrapper for Moodle

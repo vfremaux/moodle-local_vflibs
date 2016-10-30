@@ -3,11 +3,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @package courseselector
  */
+// jshint unused:false, undef:false
 
-// Define the core_course namespace if it has not already been defined
+// Define the core_course namespace if it has not already been defined.
 M.core_course = M.core_course || {};
-// Define a course selectors array for against the cure_course namespace
+
+// Define a course selectors array for against the cure_course namespace.
 M.core_course.course_selectors = [];
+
 /**
  * Retrieves an instantiated course selector or null if there isn't one by the requested name
  * @param {string} name The name of the selector to retrieve
@@ -29,27 +32,38 @@ M.core_course.get_course_selector = function (name) {
 M.core_course.init_course_selector = function (Y, name, hash, extrafields, lastsearch) {
     // Creates a new course_selector object
     var course_selector = {
+
         /** This id/name used for this control in the HTML. */
         name : name,
+
         /** Array of fields to display for each course, in addition to fullname. */
         extrafields: extrafields,
+
         /** Number of seconds to delay before submitting a query request */
         querydelay : 0.5,
+
         /** The input element that contains the search term. */
         searchfield : Y.one('#' + name + '_searchtext'),
+
         /** The clear button. */
         clearbutton : null,
+
         /** The select element that contains the list of courses. */
         listbox : Y.one('#' + name),
+
         /** Used to hold the timeout id of the timeout that waits before doing a search. */
         timeoutid : null,
+
         /** Stores any in-progress remote requests. */
         iotransactions : {},
+
         /** The last string that we searched for, so we can avoid unnecessary repeat searches. */
         lastsearch : lastsearch,
+
         /** Whether any options where selected last time we checked. Used by
          *  handle_selection_change to track when this status changes. */
         selectionempty : true,
+
         /**
          * Initialises the course selector object
          * @constructor
@@ -72,7 +86,6 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
             Y.one('#courseselector_searchanywhereid').on('click', this.handle_searchanywhere_change, this);
 
             // Define our custom event.
-            //this.createEvent('selectionchanged');
             this.selectionempty = this.is_selection_empty();
 
             // Replace the Clear submit button with a clone that is not a submit button.
@@ -85,6 +98,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
 
             this.send_query(false);
         },
+
         /**
          * Key up hander for the search text box.
          * @param {Y.Event} e the keyup event.
@@ -102,6 +116,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
                 e.halt();
             }
         },
+
         /**
          * Handles when the selection has changed. If the selection has changed from
          * empty to not-empty, or vice versa, then fire the event handlers.
@@ -113,6 +128,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
             }
             this.selectionempty = isselectionempty;
         },
+
         /**
          * Trigger a re-search when the 'search any substring' option is changed.
          */
@@ -121,6 +137,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
                 this.send_query(true);
             }
         },
+
         /**
          * Click handler for the clear button..
          */
@@ -129,6 +146,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
             this.clearbutton.set('disabled',true);
             this.send_query(false);
         },
+
         /**
          * Fires off the ajax search request.
          */
@@ -160,6 +178,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
             this.lastsearch = value;
             this.listbox.setStyle('background','url(' + M.util.image_url('i/loading', 'moodle') + ') no-repeat center center');
         },
+
         /**
          * Handle what happens when we get some data back from the search.
          * @param {int} requestid not used.
@@ -185,6 +204,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
                 return new M.core.exception(e);
             }
         },
+
         /**
          * This method should do the same sort of thing as the PHP method
          * course_selector_base::output_options.
@@ -225,6 +245,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
             }
             this.handle_selection_change();
         },
+
         /**
          * This method should do the same sort of thing as the PHP method
          * course_selector_base::output_optgroup.
@@ -268,6 +289,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
             }
             this.listbox.append(optgroup);
         },
+
         /**
          * Replace
          * @param {string} str
@@ -277,6 +299,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
         insert_search_into_str : function(str, search) {
             return str.replace("%%SEARCHTERM%%", search);
         },
+
         /**
          * Gets the search text
          * @return String the value to search for, with leading and trailing whitespace trimmed.
@@ -284,6 +307,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
         get_search_text : function() {
             return this.searchfield.get('value').toString().replace(/^ +| +$/, '');
         },
+
         /**
          * Returns true if the selection is empty (nothing is selected)
          * @return Boolean check all the options and return whether any are selected.
@@ -297,6 +321,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
             });
             return !(selection);
         },
+
         /**
          * Cancel the search delay timeout, if there is one.
          */
@@ -306,6 +331,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
                 this.timeoutid = null;
             }
         },
+
         /**
          * @param {string} name The name of the option to retrieve
          * @return the value of one of the option checkboxes.
@@ -319,14 +345,17 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
             }
         }
     };
-    // Augment the course selector with the EventTarget class so that we can use
-    // custom events
+
+    /*
+     * Augment the course selector with the EventTarget class so that we can use
+     * custom events
+     */
     Y.augment(course_selector, Y.EventTarget, null, null, {});
-    // Initialise the course selector
+    // Initialise the course selector.
     course_selector.init();
-    // Store the course selector so that it can be retrieved
+    // Store the course selector so that it can be retrieved.
     this.course_selectors[name] = course_selector;
-    // Return the course selector
+    // Return the course selector.
     return course_selector;
 };
 
@@ -338,7 +367,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
  * @return Tracker object
  */
 M.core_course.init_course_selector_options_tracker = function(Y) {
-    // Create a course selector options tracker
+    // Create a course selector options tracker.
     var course_selector_options_tracker = {
         /**
          * Initlises the option tracker and gets everything going.
@@ -355,6 +384,7 @@ M.core_course.init_course_selector_options_tracker = function(Y) {
                 Y.one('#' + setting + 'id').on('click', this.set_course_preference, this, setting);
             }
         },
+
         /**
          * Sets a course preference for the options tracker
          * @param {Y.Event|null} e
@@ -364,8 +394,8 @@ M.core_course.init_course_selector_options_tracker = function(Y) {
             M.util.set_course_preference(name, Y.one('#' + name + 'id').get('checked'));
         }
     };
-    // Initialise the options tracker
+    // Initialise the options tracker.
     course_selector_options_tracker.init();
-    // Return it just incase it is ever wanted
+    // Return it just incase it is ever wanted.
     return course_selector_options_tracker;
 };

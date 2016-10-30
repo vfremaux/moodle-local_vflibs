@@ -19,10 +19,11 @@
  * @author valery.fremaux@gmail.com
  * @category local
  */
+defined('MOODLE_INTERNAL') || die();
 
 class local_vflibs_renderer extends plugin_renderer_base {
 
-    // JQWidget wrappers
+    // JQWidget wrappers.
     /*
      * Properties : max, width, height
      */
@@ -58,7 +59,8 @@ class local_vflibs_renderer extends plugin_renderer_base {
         $str .= '<script type="text/javascript">';
         $str .= '    $(document).ready(function ()';
         $str .= '    {';
-        $str .= '        $(\'#'.$name.'\').jqxBarGauge({colorScheme: "scheme02", width: '.$properties['width'].', height:' .$properties['height'].',';
+        $str .= '        $(\'#'.$name.'\').jqxBarGauge({colorScheme: "scheme02", width: ';
+        $str .= $properties['width'].', height:' .$properties['height'].',';
         if (array_key_exists('title', $properties)) {
             $str .= '            title: { text: \''.$properties['title'].'\', ';
         }
@@ -151,7 +153,10 @@ class local_vflibs_renderer extends plugin_renderer_base {
 
         if (empty($ranges)) {
             $ranges = array();
-            $defaultrange = (object) array('start' => 0, 'end' => 100, 'color' => $properties['bgcolor'], 'opacity' => $properties['bgopacity']);
+            $defaultrange = (object) array('start' => 0,
+                                           'end' => 100,
+                                           'color' => $properties['bgcolor'],
+                                           'opacity' => $properties['bgopacity']);
             $ranges[] = $defaultrange;
         }
 
@@ -199,17 +204,21 @@ class local_vflibs_renderer extends plugin_renderer_base {
                 if (empty($r->opacity)) {
                     $r->opacity = '1';
                 }
-                $rangearr[] = '    { startValue: '.(0 + $r->start).', endValue: '.(0 + $r->end).', color: "'.$r->color.'", opacity: '.$r->opacity.'} '."\n";
+                $rangestr = '    { startValue: '.(0 + $r->start).', endValue: '.(0 + $r->end).', color: "'.$r->color;
+                $rzangestr .= '", opacity: '.$r->opacity.'} '."\n";
+                $rangearr[] = $rangestr;
             }
             $str .= implode(',', $rangearr);
             $str .= '    ],'."\n";
         }
 
         if (!empty($pointer)) {
-            $str .= 'pointer: { value: '.(0 + $pointer->value).', label: "'.$pointer->label.'", size: "'.$pointer->size.'%", color: "'.$pointer->color.'" },'."\n";
+            $str .= 'pointer: { value: '.(0 + $pointer->value).', label: "'.$pointer->label.'", size: "'.$pointer->size;
+            $str .= '%", color: "'.$pointer->color.'" },'."\n";
         }
         if (!empty($target)) {
-            $str .= 'target: { value: '.(0 + $target->value).', label: "'.$target->label.'", size: '.$target->size.', color: "'.$target->color.'" },'."\n";
+            $str .= 'target: { value: '.(0 + $target->value).', label: "'.$target->label.'", size: '.$target->size;
+            $str .= ', color: "'.$target->color.'" },'."\n";
         }
 
         $str .= 'ticks: { position: "'.$ticks->position.'", interval: '.$ticks->interval.', size: '.$ticks->size.' },'."\n";

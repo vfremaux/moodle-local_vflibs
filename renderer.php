@@ -205,7 +205,7 @@ class local_vflibs_renderer extends plugin_renderer_base {
                     $r->opacity = '1';
                 }
                 $rangestr = '    { startValue: '.(0 + $r->start).', endValue: '.(0 + $r->end).', color: "'.$r->color;
-                $rzangestr .= '", opacity: '.$r->opacity.'} '."\n";
+                $rangestr .= '", opacity: '.$r->opacity.'} '."\n";
                 $rangearr[] = $rangestr;
             }
             $str .= implode(',', $rangearr);

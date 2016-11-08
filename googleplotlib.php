@@ -14,13 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * @package local_vflibs
  * @author valery.fremaux@gmail.com
  * @category local
  */
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Implements a google maps API V3 wrapper for Moodle
@@ -31,12 +30,12 @@ function googlemaps_require_js($sensor = 'false') {
 }
 
 function googlemaps_initialize() {
-    global $GOOGLEMAPS;
+    global $googlemaps;
 
     $str = '';
 
-    if (!empty($GOOGLEMAPS)) {
-        foreach ($GOOGLEMAPS as $gmap) {
+    if (!empty($googlemaps)) {
+        foreach ($googlemaps as $gmap) {
             $str .= "google_initialize_$gmap();\n";
         }
     }
@@ -54,22 +53,28 @@ function googlemaps_initialize() {
 /**
  * ex : list($lat,$lng, $zoom) = array(-34.397, 150.644,8)
  * ex options : {
-              zoom: 8,
-              center: latlng,
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
+ *             zoom: 8,
+ *             center: latlng,
+ *             mapTypeId: google.maps.MapTypeId.ROADMAP
+ *           };
  */
 function googlemaps_print_graph($htmlid, $lat, $lng, $width = 400, $height = 350, $options = array(), $data = null) {
-    global $GOOGLEMAPS;    
+    global $googlemaps;
 
-    if (!isset($GOOGLEMAPS)) $GOOGLEMAPS = array();
+    if (!isset($googlemaps)) {
+        $googlemaps = array();
+    }
 
-    if (empty($lat)) $lat = '46.769968';
-    if (empty($lng)) $lng = '1.757813';
+    if (empty($lat)) {
+        $lat = '46.769968';
+    }
+    if (empty($lng)) {
+        $lng = '1.757813';
+    }
 
     $optionstr = json_encode($options);
-    $optionstr = preg_replace('/\"(google\.maps\.[^\s]*)\"/', "$1", $optionstr); // Remove quotes provided by php jsonisation
-    $optionstr = str_replace('"latlng"', 'latlng', $optionstr); // Remove quotes provided by php jsonisation
+    $optionstr = preg_replace('/\"(google\.maps\.[^\s]*)\"/', "$1", $optionstr); // Remove quotes provided by php jsonisation.
+    $optionstr = str_replace('"latlng"', 'latlng', $optionstr); // Remove quotes provided by php jsonisation.
 
     $str = "\n
     <script type=\"text/javascript\">
@@ -84,13 +89,13 @@ function googlemaps_print_graph($htmlid, $lat, $lng, $width = 400, $height = 350
 
     $str .= "\n<div id=\"{$htmlid}\" style=\"width:{$width}px; height:{$height}px\"></div>";
 
-    $GOOGLEMAPS[] = $htmlid;
+    $googlemaps[] = $htmlid;
 
     return $str;
 }
 
-function googlemaps_embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350, $options = array(), $data = null){
-    global $CFG, $COURSE;
+function googlemaps_embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350, $options = array(), $data = null) {
+    global $COURSE;
 
     if (empty($lat)) {
         $lat = '46.769968';
@@ -99,20 +104,10 @@ function googlemaps_embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350
         $lng = '1.757813';
     }
 
-    foreach ($data as $d) {
-        $markers[] = 'markers[]='.urlencode(json_encode($d));
-    }
-    $markerstring = '';
-    if (!empty($markers)) {
-        $markerstring = '&'.implode('&', $markers);
-    }
-
     $optionstr = json_encode($options);
-    $optionstr = preg_replace('/\"(google\.maps\.[^\s]*)\"/', "$1", $optionstr); // Remove quotes provided by php jsonisation
-    $optionstr = preg_replace('/\"([\d+.]+)\"/', "$1", $optionstr); // Remove quotes around numbers provided by php jsonisation
-    $optionstr = str_replace('"latlng"', 'latlng', $optionstr); // Remove quotes provided by php jsonisation
-
-    $url = $CFG->wwwroot.'/blocks/dashboard/googlemap.php?id='.$COURSE->id.'&lat='.$lat.'&lng='.$lng.'&options='.urlencode($optionstr).'&mapid='.$htmlid.$markerstring;
+    $optionstr = preg_replace('/\"(google\.maps\.[^\s]*)\"/', "$1", $optionstr); // Remove quotes provided by php jsonisation.
+    $optionstr = preg_replace('/\"([\d+.]+)\"/', "$1", $optionstr); // Remove quotes around numbers provided by php jsonisation.
+    $optionstr = str_replace('"latlng"', 'latlng', $optionstr); // Remove quotes provided by php jsonisation.
 
     $str = '<form name="framesend" method="POST" target="mapframe_'.$htmlid.'">';
     $str .= '<input type="hidden" name="id" value="'.$COURSE->id.'" />';
@@ -125,7 +120,12 @@ function googlemaps_embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350
     }
     $str .= '</form>';
 
-    $str = "<iframe id=\"$htmlid\" name=\"mapframe_$htmlid\" src=\"\" width=\"$width\" height=\"$height\" onload=\"document.forms['framesend'].submit()\"></iframe>";
+    $str = '<iframe id="'.$htmlid.'"
+                    name="mapframe_'.$htmlid.'"
+                    src=""
+                    width="'.$width.'"
+                    height="'.$height.'"
+                    onload="document.forms[\'framesend\'].submit()"></iframe>';
 
     return $str;
 }
@@ -138,18 +138,17 @@ function googlemaps_embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350
  * to resolve a bigger amount per day.
  */
 function googlemaps_get_geolocation($region, $address, $postalcode, $city, &$errors){
-    global $CFG;
 
-    $locationUrlstring = 'region='.$region.'&address='.urlencode($address).','.urlencode($postalcode.' '.$city);
+    $locationurlstring = 'region='.$region.'&address='.urlencode($address).','.urlencode($postalcode.' '.$city);
 
-    if ($cached = $DB->get_record('dashboard_geo_cache', array('address' => $locationUrlstring))) {
+    if ($cached = $DB->get_record('dashboard_geo_cache', array('address' => $locationurlstring))) {
         return $cached->latlng;
     }
 
     $uri = 'http://maps.google.fr/maps/api/geocode/json';
-    $querystring = 'sensor=false&'.$locationUrlstring;
+    $querystring = 'sensor=false&'.$locationurlstring;
 
-    // Initialize with the target URL
+    // Initialize with the target URL.
     $ch = curl_init($uri.'?'.$querystring);
 
     curl_setopt($ch, CURLOPT_TIMEOUT, 300);
@@ -161,31 +160,29 @@ function googlemaps_get_geolocation($region, $address, $postalcode, $city, &$err
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
-    $timestamp_send    = time();
     $rawresponse = curl_exec($ch);
-    $timestamp_receive = time();
-    
+
     if ($rawresponse === false) {
         $errors[] = curl_errno($ch) .':'. curl_error($ch);
         return false;
     }
 
-    if (!$geostruct = json_decode($rawresponse)){
+    if (!$geostruct = json_decode($rawresponse)) {
         $errors[] = "Google bad response format";
         return false;
     }
 
-    if ($geostruct->status != 'OK'){
+    if ($geostruct->status != 'OK') {
         $errors[] = "Google denied service. Reason : ".$geostruct->status;
         return false;
     }
 
     $location = $geostruct->results[0]->geometry->location->lat.','.$geostruct->results[0]->geometry->location->lng;
 
-    // caches result.
-    $cacherec->address = $locationUrlstring;
+    // Caches result.
+    $cacherec->address = $locationurlstring;
     $cacherec->latlng = $location;
     $cacherec->regioncode = $region;
     $DB->insert_record('dashboard_geo_cache', $cacherec);
-    return $location;    
+    return $location;
 }

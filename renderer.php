@@ -19,10 +19,11 @@
  * @author valery.fremaux@gmail.com
  * @category local
  */
+defined('MOODLE_INTERNAL') || die();
 
 class local_vflibs_renderer extends plugin_renderer_base {
 
-    // JQWidget wrappers
+    // JQWidget wrappers.
     /*
      * Properties : max, width, height
      */
@@ -58,7 +59,8 @@ class local_vflibs_renderer extends plugin_renderer_base {
         $str .= '<script type="text/javascript">';
         $str .= '    $(document).ready(function ()';
         $str .= '    {';
-        $str .= '        $(\'#'.$name.'\').jqxBarGauge({colorScheme: "scheme02", width: '.$properties['width'].', height:' .$properties['height'].',';
+        $str .= '        $(\'#'.$name.'\').jqxBarGauge({colorScheme: "scheme02", width: ';
+        $str .= $properties['width'].', height:' .$properties['height'].',';
         if (array_key_exists('title', $properties)) {
             $str .= '            title: { text: \''.$properties['title'].'\', ';
         }
@@ -151,7 +153,10 @@ class local_vflibs_renderer extends plugin_renderer_base {
 
         if (empty($ranges)) {
             $ranges = array();
-            $defaultrange = (object) array('start' => 0, 'end' => 100, 'color' => $properties['bgcolor'], 'opacity' => $properties['bgopacity']);
+            $defaultrange = (object) array('start' => 0,
+                                           'end' => 100,
+                                           'color' => $properties['bgcolor'],
+                                           'opacity' => $properties['bgopacity']);
             $ranges[] = $defaultrange;
         }
 
@@ -199,17 +204,21 @@ class local_vflibs_renderer extends plugin_renderer_base {
                 if (empty($r->opacity)) {
                     $r->opacity = '1';
                 }
-                $rangearr[] = '    { startValue: '.(0 + $r->start).', endValue: '.(0 + $r->end).', color: "'.$r->color.'", opacity: '.$r->opacity.'} '."\n";
+                $rangestr = '    { startValue: '.(0 + $r->start).', endValue: '.(0 + $r->end).', color: "'.$r->color;
+                $rangestr .= '", opacity: '.$r->opacity.'} '."\n";
+                $rangearr[] = $rangestr;
             }
             $str .= implode(',', $rangearr);
             $str .= '    ],'."\n";
         }
 
         if (!empty($pointer)) {
-            $str .= 'pointer: { value: '.(0 + $pointer->value).', label: "'.$pointer->label.'", size: "'.$pointer->size.'%", color: "'.$pointer->color.'" },'."\n";
+            $str .= 'pointer: { value: '.(0 + $pointer->value).', label: "'.$pointer->label.'", size: "'.$pointer->size;
+            $str .= '%", color: "'.$pointer->color.'" },'."\n";
         }
         if (!empty($target)) {
-            $str .= 'target: { value: '.(0 + $target->value).', label: "'.$target->label.'", size: '.$target->size.', color: "'.$target->color.'" },'."\n";
+            $str .= 'target: { value: '.(0 + $target->value).', label: "'.$target->label.'", size: '.$target->size;
+            $str .= ', color: "'.$target->color.'" },'."\n";
         }
 
         $str .= 'ticks: { position: "'.$ticks->position.'", interval: '.$ticks->interval.', size: '.$ticks->size.' },'."\n";
@@ -218,6 +227,118 @@ class local_vflibs_renderer extends plugin_renderer_base {
         $str .= '    });'."\n";
         $str .= '});'."\n";
         $str .= '</script>'."\n";
+
+        return $str;
+    }
+
+    /**
+     * Data is expected as an array of objects, objects have fields mapped to char series.
+     * @param string $name the graph title
+     * @param array $data an array of source data, as an array of object containing one member per serie
+     * @param array $properies a bag with keyed properties to serve graph parametrization
+     * @param string $component the component name where strings come from.
+     */
+    public function jqw_bar_chart($name, $data, $properties, $component) {
+
+        if (empty($data)) {
+            return '';
+        }
+
+        if (empty($properties['direction'])) {
+            $properties['direction'] = 'vertical';
+        }
+
+        if (empty($properties['xflip'])) {
+            $properties['xflip'] = 'false';
+        }
+
+        if (empty($properties['yflip'])) {
+            $properties['yflip'] = 'false';
+        }
+
+        // Guess series from first record.
+        $firstarr = (array)$data[0];
+        $series = array_keys($firstarr);
+        $xaxis = array_shift($series);
+
+        // Get other series and convert to a jsonified string.
+        $seriestack = array();
+        if (!empty($series)) {
+            foreach ($series as $s) {
+                $serieobj = new StdClass();
+                $serieobj->dataField = $s;
+                $serieobj->displayText = get_string($s, $component);
+                $seriestack[] = $serieobj;
+            }
+        }
+        $seriesarr = json_encode($seriestack);
+
+        $padding = '{ left: 20, top: 5, right: 20, bottom: 5 }';
+        if (!empty($properties['padding'])) {
+            $padding = json_encode($properties['padding']);
+        }
+
+        $titlepadding = '{ left: 90, top: 0, right: 0, bottom: 10 }';
+        if (!empty($properties['titlepadding'])) {
+            $titlepadding = json_encode($properties['titlepadding']);
+        }
+
+        $str = '';
+
+        $str .= '<center>';
+        $str .= '<div id="jqxBarChart'.$properties['id'].'"
+                      class="vflibs-jqbarchart"
+                      style="width:'.$properties['width'].'px; height:'.$properties['height'].'px"></div>'."\n";
+        $str .= '</center>';
+        $str .= '<script type="text/javascript">';
+
+        $str .= '$(document).ready(function () {
+            // prepare chart data
+            var graphdata'.$properties['id'].' = '.json_encode($data).';
+
+            // prepare jqxChart settings
+            var settings'.$properties['id'].' = {
+                title: "'.$name.'",
+                description: "'.$properties['desc'].'",
+                showLegend: true,
+                enableAnimations: true,
+                padding: '.$padding.',
+                titlePadding: '.$titlepadding.',
+                source: graphdata'.$properties['id'].',
+                xAxis:
+                {
+                    dataField: \''.$xaxis.'\',
+                    gridLines: { visible: true },
+                    flip: '.$properties['xflip'].',
+                    labels: {
+                        visible: true,
+                        angle:90
+                    }
+                },
+                valueAxis:
+                {
+                    flip: '.$properties['yflip'].',
+                    labels: {
+                        visible: true,
+                        angle:90
+                    }
+                },
+                colorScheme: \'scheme01\',
+                seriesGroups:
+                    [
+                        {
+                            type: \'column\',
+                            orientation: \''.$properties['direction'].'\',
+                            columnsGapPercent: 50,
+                            toolTipFormatSettings: { thousandsSeparator: \',\' },
+                            series: '.$seriesarr.'
+                        }
+                    ]
+            };
+            // setup the chart
+            $(\'#jqxBarChart'.$properties['id'].'\').jqxChart(settings'.$properties['id'].');
+        });';
+        $str .= '</script>';
 
         return $str;
     }

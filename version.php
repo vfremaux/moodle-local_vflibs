@@ -15,16 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Version details.
+ *
  * @package     local_vflibs
  * @category    local
- * @author      Valery Fremaux valery.fremaux@gmail.com
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @copyright   2014 onwards Valery Fremaux (http://www.mylearningfactory.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version  = 2016040300;   // The (date) version of this plugin.
 $plugin->requires = 2015050500;   // Requires this Moodle version.
-$plugin->release = '2.9.0 (Build 2016040300)';
+$plugin->release = '2.9.0 (Build 2016040300)';   // Release.
 $plugin->component = 'local_vflibs';
 $plugin->maturity = MATURITY_STABLE;
 

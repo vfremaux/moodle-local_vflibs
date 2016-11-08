@@ -95,7 +95,7 @@ function googlemaps_print_graph($htmlid, $lat, $lng, $width = 400, $height = 350
 }
 
 function googlemaps_embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350, $options = array(), $data = null) {
-    global $CFG, $COURSE;
+    global $COURSE;
 
     if (empty($lat)) {
         $lat = '46.769968';
@@ -138,7 +138,6 @@ function googlemaps_embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350
  * to resolve a bigger amount per day.
  */
 function googlemaps_get_geolocation($region, $address, $postalcode, $city, &$errors){
-    global $CFG;
 
     $locationurlstring = 'region='.$region.'&address='.urlencode($address).','.urlencode($postalcode.' '.$city);
 

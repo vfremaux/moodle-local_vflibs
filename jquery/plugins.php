@@ -86,5 +86,14 @@ $plugins = array(
                 'jqwidgets/jqwidgets/jqxbulletchart.js',
                 'jqwidgets/jqwidgets/styles/jqx.base.css'
             )
+        ),
+        'jqwidgets-barchart' => array(
+            'files' => array(
+                'jqwidgets/jqwidgets/jqxcore.js',
+                'jqwidgets/jqwidgets/jqxdraw.js',
+                'jqwidgets/jqwidgets/jqxchart.core.js',
+                'jqwidgets/jqwidgets/jqxdata.js',
+                'jqwidgets/jqwidgets/styles/jqx.base.css'
+            )
         )
 );

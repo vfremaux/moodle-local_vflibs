@@ -21,6 +21,7 @@
  * @author valery.fremaux@gmail.com
  * @category local
  */
+defined('MOODLE_INTERNAL') || die();
 
 function timeline_require_js($libroot) {
     global $CFG, $PAGE;
@@ -71,11 +72,11 @@ function timeline_print_graph(&$theblock, $htmlid, $width, $height, &$data, $ret
     }
 
     // Generate data on a tmp file.
-    timeline_XML_generate($theblock, $htmlid, $data);
+    timeline_generate_xml($theblock, $htmlid, $data);
 
     $str = "<div id=\"timeline_{$htmlid}\" style=\"height:{$height}px; width:{$width}pxborder: 1px solid #aaa\"></div>\n";
 
-    $genID = rand(1000, 100000);
+    $genid = rand(1000, 100000);
 
     $str .= "<script type=\"text/javascript\">
         var tl;
@@ -113,7 +114,7 @@ function timeline_print_graph(&$theblock, $htmlid, $width, $height, &$data, $ret
            ";
     }
 
-    $xmlurl = $CFG->wwwroot.'/file.php/'.$COURSE->id.'/blockdata/dashboard/timelineevents/'.$htmlid.'_'.$USER->id.'.xml?uniqueid='.$genID;
+    $xmlurl = $CFG->wwwroot.'/file.php/'.$COURSE->id.'/blockdata/dashboard/timelineevents/'.$htmlid.'_'.$USER->id.'.xml?uniqueid='.$genid;
     $str .= "
             tl = Timeline.create(document.getElementById(\"timeline_{$htmlid}\"), bandInfos);
             Timeline.loadXML(\"$xmlurl\", function(xml, url) { eventSource.loadXML(xml, url); });
@@ -145,7 +146,7 @@ function timeline_print_graph(&$theblock, $htmlid, $width, $height, &$data, $ret
  * Postgre to_char pattern : 'Mon DD YYYY HH24:MI:SS GMT'
  * Mysql formatting using date_format :  '%b %d %Y %H:%i:%s GMT'
  */
-function timeline_XML_generate(&$theblock, $htmlid, &$data) {
+function timeline_generate_xml(&$theblock, $htmlid, &$data) {
     global $CFG, $COURSE, $USER;
 
     if (!is_dir($CFG->dataroot.'/'.$COURSE->id.'/blockdata')) {
@@ -164,8 +165,8 @@ function timeline_XML_generate(&$theblock, $htmlid, &$data) {
 
     $tmp = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n\n";
     $tmp .= "<data>\n";
-    $colors = preg_split("/\r?\n/",$theblock->config->timelinecolors);
-    $colorkeys = preg_split("/\r?\n/",$theblock->config->timelinecolorkeys);
+    $colors = preg_split("/\r?\n/", $theblock->config->timelinecolors);
+    $colorkeys = preg_split("/\r?\n/", $theblock->config->timelinecolorkeys);
     $theblock->normalize($colorkeys, $colors);
     $colouring = array_combine($colorkeys, $colors);
     if (!function_exists('mytrim')) {
@@ -207,7 +208,7 @@ function timeline_XML_generate(&$theblock, $htmlid, &$data) {
         if (!empty($theblock->config->timelinecolorfield) && !empty($d->{$theblock->config->timelinecolorfield})) {
             if (array_key_exists($d->{$theblock->config->timelinecolorfield}, $colouring)) {
                 $eventattrs[] = "color=\"".$colouring[$d->{$theblock->config->timelinecolorfield}]."\"";
-                if (file_exists($basefilepath.$d->{$theblock->config->timelinecolorfield}.".png")){
+                if (file_exists($basefilepath.$d->{$theblock->config->timelinecolorfield}.".png")) {
                     $eventattrs[] = "icon=\"".$basefileurl.$d->{$theblock->config->timelinecolorfield}.".png\"";
                 }
             }
@@ -220,9 +221,9 @@ function timeline_XML_generate(&$theblock, $htmlid, &$data) {
     }
     $tmp .= "</data>\n";
 
-    $FILE = fopen($tmpfile, 'w');
-    fputs($FILE, $tmp);
-    fclose($FILE);
+    $file = fopen($tmpfile, 'w');
+    fputs($file, $tmp);
+    fclose($file);
 }
 
 function timeline_date_convert($date, $theblock) {
@@ -230,6 +231,7 @@ function timeline_date_convert($date, $theblock) {
     // This might be for further needs.
     if ($theblock->config->target != 'moodle') {
         // We have an extra PostGre db, usually date are given in Postgre format.
+        assert(true);
     }
 
     return $date;

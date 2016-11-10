@@ -94,7 +94,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
             clearbtn.replace(Y.Node.getDOMNode(this.clearbutton));
             this.clearbutton.set('id', this.name + "_clearbutton");
             this.clearbutton.on('click', this.handle_clear, this);
-            this.clearbutton.set('disabled', (this.get_search_text() == ''));
+            this.clearbutton.set('disabled', (this.get_search_text() === ''));
 
             this.send_query(false);
         },
@@ -104,15 +104,15 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
          * @param {Y.Event} e the keyup event.
          */
         handle_keyup : function(e) {
-            //  Trigger an ajax search after a delay.
+            // Trigger an ajax search after a delay.
             this.cancel_timeout();
             this.timeoutid = Y.later(this.querydelay * 1000, e, function(obj){obj.send_query(false)}, this);
 
             // Enable or diable the clear button.
-            this.clearbutton.set('disabled', (this.get_search_text() == ''));
+            this.clearbutton.set('disabled', (this.get_search_text() === ''));
 
             // If enter was pressed, prevent a form submission from happening.
-            if (e.keyCode == 13) {
+            if (e.keyCode === 13) {
                 e.halt();
             }
         },
@@ -133,7 +133,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
          * Trigger a re-search when the 'search any substring' option is changed.
          */
         handle_searchanywhere_change : function() {
-            if (this.lastsearch != '' && this.get_search_text() != '') {
+            if (this.lastsearch !== '' && this.get_search_text() !== '') {
                 this.send_query(true);
             }
         },
@@ -176,7 +176,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
             this.iotransactions[iotrans.id] = iotrans;
 
             this.lastsearch = value;
-            this.listbox.setStyle('background','url(' + M.util.image_url('i/loading', 'moodle') + ') no-repeat center center');
+            this.listbox.setStyle('background', 'url(' + M.util.image_url('i/loading', 'moodle') + ') no-repeat center center');
         },
 
         /**
@@ -220,7 +220,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
                             id : option.get('value'),
                             name : option.get('innerText') || option.get('textContent'),
                             disabled: option.get('disabled')
-                        }
+                        };
                     }
                     option.remove();
                 }, this);
@@ -258,9 +258,10 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
         output_group : function(groupname, courses, selectedcourses, processsingle) {
             var optgroup = Y.Node.create('<optgroup></optgroup>');
             var count = 0;
+            var option;
             for (var key in courses) {
                 var course = courses[key];
-                var option = Y.Node.create('<option value="' + course.id + '">' + course.name + '</option>');
+                option = Y.Node.create('<option value="' + course.id + '">' + course.name + '</option>');
                 if (course.disabled) {
                     option.set('disabled', true);
                 } else if (selectedcourses === true || selectedcourses[course.id]) {

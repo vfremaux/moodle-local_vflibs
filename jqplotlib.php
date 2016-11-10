@@ -130,21 +130,21 @@ function local_vflibs_jqplot_print_graph($htmlid, $graph, &$data, $width, $heigh
         $varsetlist,
         {$jsongraph}
     );
-     ";
+    ";
     $str .= "</script>";
 
-     $plotid++;
+    $plotid++;
 
-     if ($return) {
+    if ($return) {
         return $str;
     }
-     echo $str;
+    echo $str;
 }
 
 /**
-* Prints a bidimensional graph (map)
-* Defaults to a percent graph 100 x 100.
-*/
+ * Prints a bidimensional graph (map)
+ * Defaults to a percent graph 100 x 100.
+ */
 function local_vflibs_jqplot_print_labelled_graph(&$data, $title, $htmlid, $options) {
     global $plotid;
     static $instance = 0;
@@ -181,7 +181,9 @@ function local_vflibs_jqplot_print_labelled_graph(&$data, $title, $htmlid, $opti
     $str = '';
 
     $str .= '<center>';
-    $str .= '<div id="'.$htmlid.'" class="vflibs-jqmap" style="width:'.$options['width'].'px; height:'.$options['height'].'px;"></div>';
+    $str .= '<div id="'.$htmlid.'"
+                  class="vflibs-jqmap"
+                  style="width:'.$options['width'].'px; height:'.$options['height'].'px;"></div>';
     $str .= '</center>';
     $str .= '<script type="text/javascript" language="javascript">';
     $str .= '
@@ -228,7 +230,7 @@ function local_vflibs_jqplot_barline($name, &$data) {
     $str = "$name = ";
 
     $i = 1;
-    foreach($data as $datum){
+    foreach ($data as $datum) {
         $points[] = '['.$datum.','.$i.']';
         $i++;
     }
@@ -309,7 +311,7 @@ function local_vflibs_jqplot_print_horiz_simplebar_graph(&$data, &$ticks, $title
                 seriesDefaults:{ renderer:$.jqplot.BarRenderer,
                                rendererOptions:{barDirection:'horizontal',
                                                 barPadding: 6,
-                                                barMargin:15}, 
+                                                barMargin:15},
                                shadowAngle:135
                 },
                 series:[
@@ -386,7 +388,7 @@ function local_vflibs_jqplot_print_timecurve_bars(&$data, $title, $htmlid, $labe
                 renderer:$.jqplot.BarRenderer,
                   rendererOptions:{barDirection:'vertical', barWidth: 10, barPadding: 6, barMargin:15},
                   shadowAngle:135
-            }, 
+            },
             axes: {
                 xaxis: {
                     renderer: $.jqplot.DateAxisRenderer,

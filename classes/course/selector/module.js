@@ -71,7 +71,8 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
         init : function() {
             // Hide the search button and replace it with a label.
             var searchbutton = Y.one('#' + this.name + '_searchbutton');
-            this.searchfield.insert(Y.Node.create('<label for="' + this.name + '_searchtext">' + searchbutton.get('value') + '</label>'), this.searchfield);
+            var label = Y.Node.create('<label for="' + this.name + '_searchtext">' + searchbutton.get('value') + '</label>');
+            this.searchfield.insert(label, this.searchfield);
             searchbutton.remove();
 
             // Hook up the event handler for when the search text changes.
@@ -106,7 +107,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
         handle_keyup : function(e) {
             // Trigger an ajax search after a delay.
             this.cancel_timeout();
-            this.timeoutid = Y.later(this.querydelay * 1000, e, function(obj){obj.send_query(false)}, this);
+            this.timeoutid = Y.later(this.querydelay * 1000, e, function(obj){obj.send_query(false);}, this);
 
             // Enable or diable the clear button.
             this.clearbutton.set('disabled', (this.get_search_text() === ''));
@@ -165,9 +166,12 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
                 trans.abort();
             });
 
+            var params = 'selectorid=' + hash + '&sesskey=' + M.cfg.sesskey + '&search=' + value;
+            params += '&courseselector_searchanywhere=' + this.get_option('searchanywhere');
+
             var iotrans = Y.io(M.cfg.wwwroot + '/local/vflibs/classes/course/selector/search.php', {
                 method: 'POST',
-                data: 'selectorid=' + hash + '&sesskey=' + M.cfg.sesskey + '&search=' + value + '&courseselector_searchanywhere=' + this.get_option('searchanywhere'),
+                data: params,
                 on: {
                     complete: this.handle_response
                 },
@@ -235,13 +239,18 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
                 count ++;
             }
             if (!count) {
-                var searchstr = (this.lastsearch != '') ? this.insert_search_into_str(M.str.moodle.nomatchingcourses, this.lastsearch) : M.str.moodle.none;
-                this.output_group(searchstr, {}, selectedcourses, true)
+                if (this.lastsearch !== '') {
+                    searchstr = this.insert_search_into_str(M.str.moodle.nomatchingcourses, this.lastsearch);
+                } else {
+                    searchstr : M.str.moodle.none;
+                }
+                this.output_group(searchstr, {}, selectedcourses, true);
             }
 
             // If there were previously selected courses who do not match the search, show them too.
             if (this.get_option('preserveselected') && selectedcourses) {
-                this.output_group(this.insert_search_into_str(M.str.moodle.previouslyselectedcourses, this.lastsearch), selectedcourses, true, false);
+                str = this.insert_search_into_str(M.str.moodle.previouslyselectedcourses, this.lastsearch);
+                this.output_group(str, selectedcourses, true, false);
             }
             this.handle_selection_change();
         },
@@ -281,7 +290,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
 
             if (count > 0) {
                 optgroup.set('label', groupname + ' (' + count + ')');
-                if (processsingle && count === 1 && this.get_option('autoselectunique') && option.get('disabled') == false) {
+                if (processsingle && count === 1 && this.get_option('autoselectunique') && option.get('disabled') === false) {
                     option.set('selected', true);
                 }
             } else {

@@ -125,7 +125,7 @@ abstract class course_selector_base {
 
     public $options;
 
-    // Public API ==============================================================
+    // Public API ==============================================================.
 
     /**
      * Constructor. Each subclass must have a constructor with this signature.
@@ -277,13 +277,14 @@ abstract class course_selector_base {
         $output .= '<input type="submit" name="' . $this->name . '_searchbutton" id="';
         $output .= $this->name . '_searchbutton" value="' . $this->search_button_caption() . '" />';
         $output .= '<input type="submit" name="' . $this->name . '_clearbutton" id="';
-        $output .=  $this->name . '_clearbutton" value="' . get_string('clear') . '" />';
+        $output .= $this->name . '_clearbutton" value="' . get_string('clear') . '" />';
 
         // And the search options.
         $optionsoutput = false;
-        if (!course_selector_base::$searchoptionsoutput) {
+        if (!self::$searchoptionsoutput) {
             $class = 'courseselector_optionscollapsed';
-            $output .= print_collapsible_region_start('', 'courseselector_options', get_string('searchoptions'), $class, true, true);
+            $label = get_string('searchoptions');
+            $output .= print_collapsible_region_start('', 'courseselector_options', $label, $class, true, true);
             $label = get_string('courseselectorpreserveselected', 'local_vflibs');
             $output .= $this->option_checkbox('preserveselected', $this->preserveselected, $label);
             $label = get_string('courseselectorautoselectunique', 'local_vflibs');
@@ -293,7 +294,7 @@ abstract class course_selector_base {
             $output .= print_collapsible_region_end(true);
 
             $PAGE->requires->js_init_call('M.core_course.init_course_selector_options_tracker', array(), false, self::$jsmodule);
-            course_selector_base::$searchoptionsoutput = true;
+            self::$searchoptionsoutput = true;
         }
         $output .= "</div>\n</div>\n\n";
 

@@ -65,6 +65,10 @@ function local_vflibs_jqplot_timeline(&$data, $curveix) {
  */
 function local_vflibs_jqplot_rawline(&$data, $varname) {
 
+    if (empty($data)) {
+        return;
+    }
+
     $str = "$varname = ";
 
     foreach ($data as $x => $y) {
@@ -251,7 +255,7 @@ function local_vflibs_jqplot_simplebarline($name, &$data) {
     return $str;
 }
 
-function local_vflibs_jqplot_print_horiz_simplebar_graph(&$data, &$ticks, $title, $htmlid, $options) {
+function local_vflibs_jqplot_print_simple_bargraph(&$data, &$ticks, $title, $htmlid, $options = array()) {
     global $plotid;
     static $instance = 0;
 
@@ -260,6 +264,10 @@ function local_vflibs_jqplot_print_horiz_simplebar_graph(&$data, &$ticks, $title
 
     if (empty($data)) {
         return '';
+    }
+
+    if (empty($options['direction'])) {
+        $options['direction'] = 'vertical';
     }
 
     if (empty($options['xmin'])) {
@@ -282,6 +290,14 @@ function local_vflibs_jqplot_print_horiz_simplebar_graph(&$data, &$ticks, $title
         $options['xunit'] = '\\%';
     }
 
+    if (empty($options['xlabel'])) {
+        $options['xlabel'] = '';
+    }
+
+    if (empty($options['seriename'])) {
+        $options['seriename'] = '';
+    }
+
     $str = '';
 
     $str .= '<center>';
@@ -296,6 +312,10 @@ function local_vflibs_jqplot_print_horiz_simplebar_graph(&$data, &$ticks, $title
 
     $str .= local_vflibs_jqplot_simplebarline('graphdata', $data);
     $str .= "\n";
+
+    if (empty($ticks)) {
+        $ticks = array(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
+    }
     $str .= local_vflibs_jqplot_simplebarline('ticks'.$htmlid, $ticks);
 
     $str .= "
@@ -309,7 +329,7 @@ function local_vflibs_jqplot_print_horiz_simplebar_graph(&$data, &$ticks, $title
                     placement:'outsideGrid'},
                 title:'$title',
                 seriesDefaults:{ renderer:$.jqplot.BarRenderer,
-                               rendererOptions:{barDirection:'horizontal',
+                               rendererOptions:{barDirection:'{$options['direction']}',
                                                 barPadding: 6,
                                                 barMargin:15},
                                shadowAngle:135

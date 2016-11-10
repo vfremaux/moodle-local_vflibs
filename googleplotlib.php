@@ -132,12 +132,12 @@ function googlemaps_embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350
 
 /**
  * get exact static gelocation from a human readable address
- * Important : note that this function is sensible to Google Terms 
+ * Important : note that this function is sensible to Google Terms
  * of service definition, that is allowing a 2500 resolutions per day
  * as free unregistered service, but needing a Premier service account
  * to resolve a bigger amount per day.
  */
-function googlemaps_get_geolocation($region, $address, $postalcode, $city, &$errors){
+function googlemaps_get_geolocation($region, $address, $postalcode, $city, &$errors) {
 
     $locationurlstring = 'region='.$region.'&address='.urlencode($address).','.urlencode($postalcode.' '.$city);
 

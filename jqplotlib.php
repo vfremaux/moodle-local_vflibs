@@ -65,6 +65,10 @@ function local_vflibs_jqplot_timeline(&$data, $curveix) {
  */
 function local_vflibs_jqplot_rawline(&$data, $varname) {
 
+    if (empty($data)) {
+        return;
+    }
+
     $str = "$varname = ";
 
     foreach ($data as $x => $y) {
@@ -130,21 +134,21 @@ function local_vflibs_jqplot_print_graph($htmlid, $graph, &$data, $width, $heigh
         $varsetlist,
         {$jsongraph}
     );
-     ";
+    ";
     $str .= "</script>";
 
-     $plotid++;
+    $plotid++;
 
-     if ($return) {
+    if ($return) {
         return $str;
     }
-     echo $str;
+    echo $str;
 }
 
 /**
-* Prints a bidimensional graph (map)
-* Defaults to a percent graph 100 x 100.
-*/
+ * Prints a bidimensional graph (map)
+ * Defaults to a percent graph 100 x 100.
+ */
 function local_vflibs_jqplot_print_labelled_graph(&$data, $title, $htmlid, $options) {
     global $plotid;
     static $instance = 0;
@@ -181,7 +185,9 @@ function local_vflibs_jqplot_print_labelled_graph(&$data, $title, $htmlid, $opti
     $str = '';
 
     $str .= '<center>';
-    $str .= '<div id="'.$htmlid.'" class="vflibs-jqmap" style="width:'.$options['width'].'px; height:'.$options['height'].'px;"></div>';
+    $str .= '<div id="'.$htmlid.'"
+                  class="vflibs-jqmap"
+                  style="width:'.$options['width'].'px; height:'.$options['height'].'px;"></div>';
     $str .= '</center>';
     $str .= '<script type="text/javascript" language="javascript">';
     $str .= '
@@ -228,7 +234,7 @@ function local_vflibs_jqplot_barline($name, &$data) {
     $str = "$name = ";
 
     $i = 1;
-    foreach($data as $datum){
+    foreach ($data as $datum) {
         $points[] = '['.$datum.','.$i.']';
         $i++;
     }
@@ -249,7 +255,7 @@ function local_vflibs_jqplot_simplebarline($name, &$data) {
     return $str;
 }
 
-function local_vflibs_jqplot_print_horiz_simplebar_graph(&$data, &$ticks, $title, $htmlid, $options) {
+function local_vflibs_jqplot_print_simple_bargraph(&$data, &$ticks, $title, $htmlid, $options = array()) {
     global $plotid;
     static $instance = 0;
 
@@ -258,6 +264,10 @@ function local_vflibs_jqplot_print_horiz_simplebar_graph(&$data, &$ticks, $title
 
     if (empty($data)) {
         return '';
+    }
+
+    if (empty($options['direction'])) {
+        $options['direction'] = 'vertical';
     }
 
     if (empty($options['xmin'])) {
@@ -280,6 +290,14 @@ function local_vflibs_jqplot_print_horiz_simplebar_graph(&$data, &$ticks, $title
         $options['xunit'] = '\\%';
     }
 
+    if (empty($options['xlabel'])) {
+        $options['xlabel'] = '';
+    }
+
+    if (empty($options['seriename'])) {
+        $options['seriename'] = '';
+    }
+
     $str = '';
 
     $str .= '<center>';
@@ -294,6 +312,10 @@ function local_vflibs_jqplot_print_horiz_simplebar_graph(&$data, &$ticks, $title
 
     $str .= local_vflibs_jqplot_simplebarline('graphdata', $data);
     $str .= "\n";
+
+    if (empty($ticks)) {
+        $ticks = array(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
+    }
     $str .= local_vflibs_jqplot_simplebarline('ticks'.$htmlid, $ticks);
 
     $str .= "
@@ -307,9 +329,9 @@ function local_vflibs_jqplot_print_horiz_simplebar_graph(&$data, &$ticks, $title
                     placement:'outsideGrid'},
                 title:'$title',
                 seriesDefaults:{ renderer:$.jqplot.BarRenderer,
-                               rendererOptions:{barDirection:'horizontal',
+                               rendererOptions:{barDirection:'{$options['direction']}',
                                                 barPadding: 6,
-                                                barMargin:15}, 
+                                                barMargin:15},
                                shadowAngle:135
                 },
                 series:[
@@ -386,7 +408,7 @@ function local_vflibs_jqplot_print_timecurve_bars(&$data, $title, $htmlid, $labe
                 renderer:$.jqplot.BarRenderer,
                   rendererOptions:{barDirection:'vertical', barWidth: 10, barPadding: 6, barMargin:15},
                   shadowAngle:135
-            }, 
+            },
             axes: {
                 xaxis: {
                     renderer: $.jqplot.DateAxisRenderer,

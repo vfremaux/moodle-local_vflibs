@@ -242,7 +242,7 @@ M.core_course.init_course_selector = function (Y, name, hash, extrafields, lasts
                 if (this.lastsearch !== '') {
                     searchstr = this.insert_search_into_str(M.str.moodle.nomatchingcourses, this.lastsearch);
                 } else {
-                    searchstr : M.str.moodle.none;
+                    searchstr = M.str.moodle.none;
                 }
                 this.output_group(searchstr, {}, selectedcourses, true);
             }

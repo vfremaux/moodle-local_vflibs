@@ -198,10 +198,6 @@ function local_vflibs_jqplot_print_labelled_graph(&$data, $title, $htmlid, $opti
 
     $str .= local_vflibs_jqplot_labelled_rawline($data, 'data_'.$htmlid);
 
-    $title = str_replace("'", "\\'", $title);
-    $options['xlabel'] = str_replace("'", "\\'", $options['xlabel']);
-    $options['ylabel'] = str_replace("'", "\\'", $options['ylabel']);
-
     $str .= "
         plot{$plotid} = \$.jqplot(
             '{$htmlid}',
@@ -359,7 +355,7 @@ function local_vflibs_jqplot_print_simple_bargraph(&$data, &$ticks, $title, $htm
 
 /**
  * Prints a timelined curve.
- * Data is expected as an array of data series, each being an array with [date,value] pairs.
+ * Data is expected as an array of data series, each bein an array with [date,value] pairs.
  * @param array &$data
  * @param string $title the graph title
  * @param string $htmlid

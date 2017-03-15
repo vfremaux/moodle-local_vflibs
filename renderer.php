@@ -110,8 +110,8 @@ class local_vflibs_renderer extends plugin_renderer_base {
         $str .= '    $(document).ready(function ()';
         $str .= '    {';
         $str .= '       $("#'.$name.'").jqxProgressBar({';
-        $str .= '           width: '.$properties['width'].',';
-        $str .= '           height: '.$properties['height'].',';
+        $str .= '           width: \''.$properties['width'].'\',';
+        $str .= '           height: \''.$properties['height'].'\',';
         $str .= '           value: '.$value.',';
         $str .= '           template: \''.$properties['template'].'\',';
         $str .= '           animationDuration: '.$properties['animation'].'});';
@@ -188,8 +188,8 @@ class local_vflibs_renderer extends plugin_renderer_base {
         $str .= '<script type="text/javascript">';
         $str .= '    $(document).ready(function () {'."\n";
         $str .= '        $("#jqxBulletChart'.$properties['id'].'").jqxBulletChart({'."\n";
-        $str .= '            width: '.$properties['width'].', '."\n";
-        $str .= '            height: '.$properties['height'].', '."\n";
+        $str .= '            width: "'.$properties['width'].'", '."\n";
+        $str .= '            height: "'.$properties['height'].'", '."\n";
         $str .= '            barSize: "'.$properties['barsize'].'%", '."\n";
         $str .= '            title: "'.$name.'",'."\n";
         if (!empty($properties['desc'])) {

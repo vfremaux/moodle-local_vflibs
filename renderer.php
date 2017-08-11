@@ -235,7 +235,7 @@ class local_vflibs_renderer extends plugin_renderer_base {
      * Data is expected as an array of objects, objects have fields mapped to char series.
      * @param string $name the graph title
      * @param array $data an array of source data, as an array of object containing one member per serie
-     * @param array $properies a bag with keyed properties to serve graph parametrization
+     * @param array $properties a bag with keyed properties to serve graph parametrization
      * @param string $component the component name where strings come from.
      */
     public function jqw_bar_chart($name, $data, $properties, $component) {
@@ -338,6 +338,41 @@ class local_vflibs_renderer extends plugin_renderer_base {
             // setup the chart
             $(\'#jqxBarChart'.$properties['id'].'\').jqxChart(settings'.$properties['id'].');
         });';
+        $str .= '</script>';
+
+        return $str;
+    }
+
+    /**
+     * Provides a JQWidgets switch button
+     * @param text $name
+     * @param bool $value
+     * @param array $properties an array of propertues with ('width', 'height', 'onchecked', 'onunchecked')
+     */
+    public function jqw_switchbutton($name, $value, $properties) {
+
+        $initial = ($value) ? 'true' : 'false';
+        if (empty($properties['width'])) {
+            $properties['width'] = 80;
+        }
+
+        if (empty($properties['height'])) {
+            $properties['height'] = 30;
+        }
+
+        $str = '<div id="'.$name.'"></div>';
+        $str .= '<script type="text/javascript">';
+        $str .= '  $(document).ready(function () {';
+        $str .= ' $(\'#'.$name.'\').jqxSwitchButton({ height: '.$properties['height'].', ';
+        $str .= 'width: '.$properties['width'].', checked: '.$initial.' }); ';
+
+        $str .= ' $(\'#'.$name.'\').on(\'checked\', function (event) {';
+        $str .= $properties['onchecked'];
+        $str .= ' });';
+        $str .= ' $(\'#'.$name.'\').on(\'unchecked\', function (event) {';
+        $str .= $properties['onunchecked'];
+        $str .= ' });';
+        $str .= '});';
         $str .= '</script>';
 
         return $str;

@@ -113,7 +113,7 @@ function googlemaps_embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350
     $str .= '<input type="hidden" name="id" value="'.$COURSE->id.'" />';
     $str .= '<input type="hidden" name="lat" value="'.$lat.'" />';
     $str .= '<input type="hidden" name="lng" value="'.$lng.'" />';
-    $str .= '<input type="hidden" name="options" value="'.$optionsstr.'" />';
+    $str .= '<input type="hidden" name="options" value="'.$optionstr.'" />';
     $str .= '<input type="hidden" name="mapid" value="'.$htmlid.'" />';
     foreach ($data as $d) {
         $str .= '<input type="hidden" name="marker[]" value="'.json_encode($d).'" />';

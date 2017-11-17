@@ -1,4 +1,6 @@
 <?php
+
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,42 +15,138 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * pdflib.php - Moodle PDF library
+ *
+ * We currently use the TCPDF library by Nicola Asuni.
+ *
+ * The default location for fonts that are included with TCPDF is
+ * lib/tcpdf/fonts/. If PDF_CUSTOM_FONT_PATH exists, this directory
+ * will be used instead of lib/tcpdf/fonts/, the default location is
+ * $CFG->dataroot.'/fonts/'.
+ *
+ * You should always copy all fonts from lib/tcpdf/fonts/ to your
+ * PDF_CUSTOM_FONT_PATH and then add extra fonts. Alternatively
+ * you may download all TCPDF fonts from http://www.tcpdf.org/download.php
+ * and extract them to PDF_CUSTOM_FONT_PATH directory.
+ *
+ * You can specify your own default font family in config.php
+ * by defining PDF_DEFAULT_FONT constant there.
+ *
+ * If you want to add True Type fonts such as "Arial Unicode MS",
+ * you need to create a simple script and then execute it, it should add
+ * new file to your fonts directory:
+ * <code>
+ *   <?php
+ *   require('config.php');
+ *   require_once($CFG->libdir . '/pdflib.php');
+ *   TCPDF_FONTS::addTTFfont('/full_path_to/ARIALUNI.TTF', 'TrueTypeUnicode');
+ * </code>
+ * This script will convert the TTF file to format compatible with TCPDF.
+ *
+ * Please note you need to have appropriate license to use the font files on your server!
+ *
+ * Example usage:
+ * <code>
+ *    $doc = new pdf;
+ *    $doc->setPrintHeader(false);
+ *    $doc->setPrintFooter(false);
+ *    $doc->AddPage();
+ *    $doc->Write(5, 'Hello World!');
+ *    $doc->Output();
+ * </code>
+ *
+ * @package     moodlecore
+ * @copyright   Vy-Shane Sin Fat
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
-$config = get_config('local_vflibs');
-
-if (!class_exists('TCPDF')) {
-    if (!empty($config->enablelocalpdf)) {
-        require_once($CFG->dirroot.'/local/vflibs/tcpdf/tcpdf.php');
-    } else {
-        require_once($CFG->dirroot.'/lib/pdflib.php');
-    }
+if (!defined('PDF_CUSTOM_FONT_PATH')) {
+    /** Defines the site-specific location of fonts. */
+    define('PDF_CUSTOM_FONT_PATH', $CFG->dataroot.'/fonts/');
 }
 
-function tcpdf_decode_html_color($htmlcolor, $reverse = false) {
-    if (preg_match('/#([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])/', $htmlcolor, $matches)) {
-        $r = hexdec($matches[1]);
-        $g = hexdec($matches[2]);
-        $b = hexdec($matches[3]);
-        return array($r, $g, $b);
-    }
-    if ($reverse){
-        return array(255 - $r,255 - $g,255 - $b);
-    }
-    return array(0,0,0);
+if (!defined('PDF_DEFAULT_FONT')) {
+    /** Default font to be used. */
+    define('PDF_DEFAULT_FONT', 'FreeSerif');
 }
+
+/** tell tcpdf it is configured here instead of in its own config file */
+define('K_TCPDF_EXTERNAL_CONFIG', 1);
+
+// The configuration constants needed by tcpdf follow
 
 /**
- * Makes physical path accessible for document integration 
+ * Init K_PATH_FONTS and PDF_FONT_NAME_MAIN constant.
+ *
+ * Unfortunately this hack is necessary because the constants need
+ * to be defined before inclusion of the tcpdf.php file.
  */
-function tcpdf_get_path_from_hash($contenthash) {
+function tcpdf_init_k_font_path() {
     global $CFG;
 
-    // Detect is local file or not.
-    $l1 = $contenthash[0].$contenthash[1];
-    $l2 = $contenthash[2].$contenthash[3];
-    return "$l1/$l2";
+    $defaultfonts = $CFG->dirroot.'/lib/tcpdf/fonts/';
+
+    if (!defined('K_PATH_FONTS')) {
+        if (is_dir(PDF_CUSTOM_FONT_PATH)) {
+            // NOTE:
+            //   There used to be an option to have just one file and having it set as default
+            //   but that does not make sense any more because add-ons using standard fonts
+            //   would fail very badly, also font families consist of multiple php files for
+            //   regular, bold, italic, etc.
+
+            // Check for some standard font files if present and if not do not use the custom path.
+            $somestandardfiles = array('courier',  'helvetica', 'times', 'symbol', 'zapfdingbats', 'freeserif', 'freesans');
+            $missing = false;
+            foreach ($somestandardfiles as $file) {
+                if (!file_exists(PDF_CUSTOM_FONT_PATH . $file . '.php')) {
+                    $missing = true;
+                    break;
+                }
+            }
+            if ($missing) {
+                define('K_PATH_FONTS', $defaultfonts);
+            } else {
+                define('K_PATH_FONTS', PDF_CUSTOM_FONT_PATH);
+            }
+        } else {
+            define('K_PATH_FONTS', $defaultfonts);
+        }
+    }
+
+    if (!defined('PDF_FONT_NAME_MAIN')) {
+        define('PDF_FONT_NAME_MAIN', strtolower(PDF_DEFAULT_FONT));
+    }
 }
+tcpdf_init_k_font_path();
+
+/** tcpdf installation path */
+define('K_PATH_MAIN', $CFG->dirroot.'/lib/tcpdf/');
+
+/** URL path to tcpdf installation folder */
+define('K_PATH_URL', $CFG->wwwroot . '/lib/tcpdf/');
+
+/** cache directory for temporary files (full path) */
+define('K_PATH_CACHE', $CFG->cachedir . '/tcpdf/');
+
+/** images directory */
+define('K_PATH_IMAGES', $CFG->dirroot . '/');
+
+/** blank image */
+define('K_BLANK_IMAGE', K_PATH_IMAGES . 'pix/spacer.gif');
+
+/** height of cell repect font height */
+define('K_CELL_HEIGHT_RATIO', 1.25);
+
+/** reduction factor for small font */
+define('K_SMALL_RATIO', 2/3);
+
+/** Throw exceptions from errors so they can be caught and recovered from. */
+define('K_TCPDF_THROW_EXCEPTION_ERROR', true);
+
+require_once(dirname(__FILE__).'/tcpdf/tcpdf.php');
 
 /**
  * Wrapper class that extends TCPDF (lib/tcpdf/tcpdf.php).

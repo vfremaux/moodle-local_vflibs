@@ -27,3 +27,5 @@ $string['previouslyselectedcourses'] = 'Précédemment sélectionnés';
 $string['courseselectorpreserveselected'] = 'Préserver la sélection';
 $string['courseselectorautoselectunique'] = 'Sélectionner automatiquement un résultat unique';
 $string['courseselectorsearchanywhere'] = 'Rechercher partout';
+$string['enablelocalpdf'] = 'Activer la version locale de tcpdf';
+$string['enablelocalpdf_desc'] = 'Active la version locale de TCPDF avec des polices et fonctionnalités en plus. Ceci nécessite de protéger la distribution standard. Plus d\'informations dans le fichier README.txt.';

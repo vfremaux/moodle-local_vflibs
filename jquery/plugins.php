@@ -95,5 +95,13 @@ $plugins = array(
                 'jqwidgets/jqwidgets/jqxdata.js',
                 'jqwidgets/jqwidgets/styles/jqx.base.css'
             )
+        ),
+        'jqwidgets-switchbutton' => array(
+            'files' => array(
+                'jqwidgets/jqwidgets/jqxcore.js',
+                'jqwidgets/jqwidgets/jqxswitchbutton.js',
+                'jqwidgets/jqwidgets/jqxcheckbox.js',
+                'jqwidgets/jqwidgets/styles/jqx.base.css'
+            )
         )
 );

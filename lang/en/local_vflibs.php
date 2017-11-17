@@ -27,3 +27,5 @@ $string['previouslyselectedcourses'] = 'Previously selected';
 $string['courseselectorpreserveselected'] = 'Preserve selection';
 $string['courseselectorautoselectunique'] = 'Auto select unique';
 $string['courseselectorsearchanywhere'] = 'Search anywhere';
+$string['enablelocalpdf'] = 'Enable local pdf';
+$string['enablelocalpdf_desc'] = 'enables the use of the locally modified tcpdf library. This needs protecting the original lib/tcpdf lib from definition collision. Read the REDME.txt file for more information.';

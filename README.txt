@@ -1,4 +1,4 @@
-This local component introduces a change in the way we maange non standard additional
+This local component introduces a change in the way we manage non standard additional
 librairies needed by plugins from Valery Fremaux (valery.fremaux@gmail.com), lead
 independant Moodle Architect in France.
 
@@ -30,4 +30,10 @@ XPdf : Used by search engine
 2015122000
 ########################
 
-Adding tcpdf upgraded version for all VF component line
+TCPDF : A reworked version of tcpdf to unlock some limitations :
+- more fonts hanlded
+- better control of the page dimensions
+
+Using local tcpdf library is needed for some special features of the report generation of learningtimecheck and trainingsessions.
+You need enable localpdf use in the local_cflibs plugin and replace the lib/pdflib.php original file in order to protect
+double possibl definition of some common constants. 

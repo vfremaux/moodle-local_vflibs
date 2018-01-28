@@ -17,8 +17,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $config = get_config('local_vflibs');
 
-if (!class_exists('pdf')) {
-
 if (!class_exists('TCPDF')) {
     if (!empty($config->enablelocalpdf)) {
         require_once($CFG->dirroot.'/local/vflibs/tcpdf/tcpdf.php');
@@ -154,6 +152,4 @@ class pdf extends TCPDF {
 
         return $families;
     }
-}
-
 }

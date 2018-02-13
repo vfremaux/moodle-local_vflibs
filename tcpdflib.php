@@ -15,8 +15,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$config = get_config('local_vflibs');
+
 if (!class_exists('TCPDF')) {
-    require_once($CFG->dirroot.'/local/vflibs/tcpdf/tcpdf.php');
+    if (!empty($config->enablelocalpdf)) {
+        require_once($CFG->dirroot.'/local/vflibs/tcpdf/tcpdf.php');
+    } else {
+        require_once($CFG->dirroot.'/lib/pdflib.php');
+    }
 }
 
 function tcpdf_decode_html_color($htmlcolor, $reverse = false) {

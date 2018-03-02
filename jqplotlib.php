@@ -447,3 +447,51 @@ function local_vflibs_jqplot_print_timecurve_bars(&$data, $title, $htmlid, $labe
 
     return $str;
 }
+
+function local_vflibs_jqplot_simple_donut($data, $htmlid, $class, $attributes = null) {
+    global $plotid;
+
+    $attrs = '';
+    $htmlstyle = '';
+    if (array_key_exists('height', $attributes)) {
+        $attrs .= 'height: '.$attributes['height'].',';
+        $htmlstyle .= ' min-height:'.$attributes['height'].'px; ';
+    }
+
+    if (array_key_exists('width', $attributes)) {
+        $attrs .= 'width: '.$attributes['width'].',';
+        $htmlstyle .= ' min-width:'.$attributes['width'].'px; width:'.$attributes['width'].'px; ';
+    }
+
+    $str = '
+    <div id="'.$htmlid.'" class="'.$class.'" style="'.$htmlstyle.'"></div>
+    <script type="text/javascript">
+    $.jqplot.config.enablePlugins = true;
+
+    var data'.$htmlid.' = '.json_encode($data).';
+
+    var plot'.$plotid.' = $.jqplot(\''.$htmlid.'\', [data'.$htmlid.'], {
+        '.$attrs.'
+        seriesDefaults: {
+            // make this a donut chart.
+            renderer:$.jqplot.DonutRenderer,
+            rendererOptions:{
+                // Donut\'s can be cut into slices like pies.
+                sliceMargin: 3,
+                // Pies and donuts can start at any arbitrary angle.
+                startAngle: 90,
+                showDataLabels: true,
+                // By default, data labels show the percentage of the donut/pie.
+                // You can show the data \'value\' or data \'label\' instead.
+                dataLabels: \'label\',
+                // "totalLabel=true" uses the centre of the donut for the total amount
+                totalLabel: false
+            }
+        }
+    });
+    </script>
+    ';
+
+    $plotid++;
+    return $str;
+}

@@ -39,7 +39,22 @@ if ($hassiteconfig) {
     $ADMIN->add('localplugins', $settings);
 
     $key = 'local_vflibs/enablelocalpdf';
-    $label = get_string('enablelocalpdf', 'local_vflibs');
-    $desc = get_string('enablelocalpdf_desc', 'local_vflibs');
+    $label = get_string('configenablelocalpdf', 'local_vflibs');
+    $desc = get_string('configenablelocalpdf_desc', 'local_vflibs');
     $settings->add(new admin_setting_configcheckbox($key, $label, $desc, 0));
+
+    $key = 'local_vflibs/docbaseurl';
+    $label = get_string('configdocbaseurl', 'local_vflibs');
+    $desc = get_string('configdocbaseurl_desc', 'local_vflibs');
+    $settings->add(new admin_setting_configtext($key, $label, $desc, ''));
+
+    $key = 'local_vflibs/doccustomerid';
+    $label = get_string('configdoccustomerid', 'local_vflibs');
+    $desc = get_string('configdoccustomerid_desc', 'local_vflibs');
+    $settings->add(new admin_setting_configtext($key, $label, $desc, ''));
+
+    $key = 'local_vflibs/doccustomerpublickey';
+    $label = get_string('configdoccustomerpublickey', 'local_vflibs');
+    $desc = get_string('configdoccustomerpublickey_desc', 'local_vflibs');
+    $settings->add(new admin_setting_configtextarea($key, $label, $desc, ''));
 }

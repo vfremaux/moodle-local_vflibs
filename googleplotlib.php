@@ -136,6 +136,11 @@ function googlemaps_embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350
  * of service definition, that is allowing a 2500 resolutions per day
  * as free unregistered service, but needing a Premier service account
  * to resolve a bigger amount per day.
+ * @param string $region
+ * @param string $address
+ * @param string $postalcode
+ * @param string $city
+ * @param arrayref &$errors filled with google errors
  */
 function googlemaps_get_geolocation($region, $address, $postalcode, $city, &$errors) {
 

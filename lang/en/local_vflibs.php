@@ -21,9 +21,23 @@
  */
 
 $string['pluginname'] = 'Extra common libraries for VF plugins';
+
 $string['potcourses'] = 'Potential courses';
 $string['nomatchingcourses'] = 'No courses matching';
 $string['previouslyselectedcourses'] = 'Previously selected';
 $string['courseselectorpreserveselected'] = 'Preserve selection';
 $string['courseselectorautoselectunique'] = 'Auto select unique';
 $string['courseselectorsearchanywhere'] = 'Search anywhere';
+$string['configenablelocalpdf'] = 'Enable local pdf';
+$string['configdocbaseurl'] = 'Documentation base url';
+$string['configdoccustomerid'] = 'Documentation customer id';
+$string['configdoccustomerpublickey'] = 'Documentation public key';
+$string['helponblock'] = 'Help on the block';
+$string['helponmodule'] = 'Help on the course module';
+
+$string['configenablelocalpdf_desc'] = 'Enables the use of the locally modified tcpdf library. This needs protecting
+the original lib/tcpdf lib from definition collision. Read the REDME.txt file for more information.';
+
+$string['configdocbaseurl_desc'] = 'Base url for the remote documentation source';
+$string['configdoccustomerid_desc'] = 'Customer key for document access authentication';
+$string['configdoccustomerpublickey_desc'] = 'A PEM public key for encrypting the documentation access token. It is given by the documentation provider.';

@@ -460,7 +460,7 @@ function local_vflibs_jqplot_simple_donut($data, $htmlid, $class, $attributes = 
 
     if (array_key_exists('width', $attributes)) {
         $attrs .= 'width: '.$attributes['width'].',';
-        $htmlstyle .= ' min-width:'.$attributes['width'].'px; ';
+        $htmlstyle .= ' min-width:'.$attributes['width'].'px; width:'.$attributes['width'].'px; ';
     }
 
     $str = '

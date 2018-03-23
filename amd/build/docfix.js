@@ -30,7 +30,7 @@ define(['jquery', 'core/log'], function($, log) {
 
             log.debug('ADM VFLibs Docfix initialized');
         }
-    }
+    };
 
     return docfix;
 });

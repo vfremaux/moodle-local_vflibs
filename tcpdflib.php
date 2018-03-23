@@ -15,8 +15,18 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-if (!class_exists('TCPDF')) {
-    require_once($CFG->dirroot.'/local/vflibs/tcpdf/tcpdf.php');
+$config = get_config('local_vflibs');
+
+if (!class_exists('pdf')) {
+
+if (!class_exists('VFTCPDF')) {
+    if (!empty($config->enablelocalpdf)) {
+        require_once($CFG->dirroot.'/local/vflibs/vftcpdf/tcpdf.php');
+        require_once($CFG->dirroot.'/local/vflibs/vftcpdf/vfclassrouter.php');
+    } else {
+        require_once($CFG->dirroot.'/lib/pdflib.php');
+        require_once($CFG->dirroot.'/local/vflibs/vftcpdf/standardclassrouter.php');
+    }
 }
 
 function tcpdf_decode_html_color($htmlcolor, $reverse = false) {
@@ -26,7 +36,7 @@ function tcpdf_decode_html_color($htmlcolor, $reverse = false) {
         $b = hexdec($matches[3]);
         return array($r, $g, $b);
     }
-    if ($reverse){
+    if ($reverse) {
         return array(255 - $r,255 - $g,255 - $b);
     }
     return array(0,0,0);
@@ -42,4 +52,7 @@ function tcpdf_get_path_from_hash($contenthash) {
     $l1 = $contenthash[0].$contenthash[1];
     $l2 = $contenthash[2].$contenthash[3];
     return "$l1/$l2";
+}
+
+
 }

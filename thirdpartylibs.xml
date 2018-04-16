@@ -56,4 +56,18 @@
     <version></version>
     <licenseversion></licenseversion>
   </library>
+  <library>
+    <location>__patch</location>
+    <name>Moodle core patched files</name>
+    <license>GPL v3</license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>__reference</location>
+    <name>Moodle core files</name>
+    <license>GPL</license>
+    <version>v3</version>
+    <licenseversion></licenseversion>
+  </library>
 </libraries>

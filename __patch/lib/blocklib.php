@@ -1062,8 +1062,9 @@ class block_manager {
             $docurl = local_vflibs_make_doc_url('block_'.$block->instance->blockname);
 
             if ($docurl) {
-                // $str = new lang_string('helponblock', 'block', $blocktitle);
-                $str = "Help on block ";
+                global $PAGE;
+                $PAGE->requires->js_call_amd('local/vflibs', 'init');
+                $str = get_string('helponblock', 'local_vflibs');
                 $url = new moodle_url('/local/vflibs/docwrap.php', array('url' => $docurl));
                 $controls[] = new action_menu_link_primary(
                     $url,

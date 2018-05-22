@@ -14,23 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Version details.
- *
- * @package     local_vflibs
- * @category    local
- * @author      Valery Fremaux <valery.fremaux@gmail.com>
- * @copyright   2014 onwards Valery Fremaux (http://www.mylearningfactory.com)
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace local_vflibs\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2018021005;   // The (date) version of this plugin.
-$plugin->requires = 2018042700;   // Requires this Moodle version.
-$plugin->release = '3.5.0 (Build 2018021005)';   // Release.
-$plugin->component = 'local_vflibs';
-$plugin->maturity = MATURITY_STABLE;
-
-// Non moodle attributes.
-$plugin->codeincrement = '3.5.0002';
+class provider implements \core_privacy\local\metadata\null_provider {
+}

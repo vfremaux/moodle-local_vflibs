@@ -26,30 +26,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-<<<<<<< HEAD
-$plugin->version  = 2016081100;   // The (date) version of this plugin.
-<<<<<<< HEAD
-$plugin->requires = 2017050500;   // Requires this Moodle version.
-$plugin->release = '3.3.0 (Build 2016081100)';   // Release.
-=======
-$plugin->requires = 2017110800;   // Requires this Moodle version.
-$plugin->release = '3.4.0 (Build 2016081100)';   // Release.
->>>>>>> MOODLE_34_STABLE
-=======
 $plugin->version  = 2018021005;   // The (date) version of this plugin.
-$plugin->requires = 2017110800;   // Requires this Moodle version.
-$plugin->release = '3.4.0 (Build 2018021005)';   // Release.
->>>>>>> MOODLE_34_STABLE
+$plugin->requires = 2018042700;   // Requires this Moodle version.
+$plugin->release = '3.5.0 (Build 2018021005)';   // Release.
 $plugin->component = 'local_vflibs';
 $plugin->maturity = MATURITY_STABLE;
 
 // Non moodle attributes.
-<<<<<<< HEAD
-<<<<<<< HEAD
-$plugin->codeincrement = '3.3.0001';
-=======
-$plugin->codeincrement = '3.4.0001';
->>>>>>> MOODLE_34_STABLE
-=======
-$plugin->codeincrement = '3.4.0002';
->>>>>>> MOODLE_34_STABLE
+$plugin->codeincrement = '3.5.0002';

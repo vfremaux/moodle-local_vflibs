@@ -1562,7 +1562,7 @@
         this.gridLineWidth = 1.0;
         // prop: background
         // css spec for the background color.
-        this.background = '#fffdf6';
+        this.background = 'transparent';
         // prop: borderColor
         // css spec for the color of the grid border.
         this.borderColor = '#999999';
@@ -1571,10 +1571,10 @@
         this.borderWidth = 2.0;
         // prop: drawBorder
         // True to draw border around grid.
-        this.drawBorder = true;
+        this.drawBorder = false;
         // prop: shadow
         // whether to show a shadow behind the grid.
-        this.shadow = true;
+        this.shadow = false;
         // prop: shadowAngle
         // shadow angle in degrees
         this.shadowAngle = 45;

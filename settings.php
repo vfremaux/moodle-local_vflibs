@@ -57,4 +57,16 @@ if ($hassiteconfig) {
     $label = get_string('configdoccustomerpublickey', 'local_vflibs');
     $desc = get_string('configdoccustomerpublickey_desc', 'local_vflibs');
     $settings->add(new admin_setting_configtextarea($key, $label, $desc, ''));
+
+    $key = 'local_vflibs/donutrenderercolors';
+    $label = get_string('configdonutrenderercolors', 'local_vflibs');
+    $desc = get_string('configdonutrenderercolors_desc', 'local_vflibs');
+    $default = '#4bb2c5,#ea2aa228'; // default JQplot colors.
+    $settings->add(new admin_setting_configtext($key, $label, $desc, $default));
+
+    $key = 'local_vflibs/jqplotshadows';
+    $label = get_string('configjqplotshadows', 'local_vflibs');
+    $desc = get_string('configjqplotshadows_desc', 'local_vflibs');
+    $default = true; // default JQplot shadows.
+    $settings->add(new admin_setting_configcheckbox($key, $label, $desc, $default));
 }

@@ -413,6 +413,9 @@ function local_vflibs_jqplot_print_timecurve_bars(&$data, $title, $htmlid, $labe
                   rendererOptions:{barDirection:'vertical', barWidth: 10, barPadding: 6, barMargin:15},
                   shadowAngle:135
             },
+            cursor: {
+                show: false
+            },
             axes: {
                 xaxis: {
                     renderer: $.jqplot.DateAxisRenderer,
@@ -449,49 +452,45 @@ function local_vflibs_jqplot_print_timecurve_bars(&$data, $title, $htmlid, $labe
 }
 
 function local_vflibs_jqplot_simple_donut($data, $htmlid, $class, $attributes = null) {
-    global $plotid;
+    global $plotid, $OUTPUT;
 
-    $attrs = '';
-    $htmlstyle = '';
+    if (is_null($plotid)) {
+        $plotid = 1;
+    }
+
+    $config = get_config('local_vflibs');
+
+    $template = new StdClass;
+
+    $template->htmlid = $htmlid;
+    $template->class = $class;
+    $template->plotid = $plotid;
+    $template->shadowalpha = (empty($config->jqplotshadows)) ? 0 : 1;
+
+    $template->plotattrs = '';
+    $template->htmlstyle = '';
     if (array_key_exists('height', $attributes)) {
-        $attrs .= 'height: '.$attributes['height'].',';
-        $htmlstyle .= ' min-height:'.$attributes['height'].'px; ';
+        $template->plotattrs .= 'height: '.$attributes['height'].',';
+        $template->htmlstyle .= ' min-height:'.$attributes['height'].'px; ';
     }
 
     if (array_key_exists('width', $attributes)) {
-        $attrs .= 'width: '.$attributes['width'].',';
-        $htmlstyle .= ' min-width:'.$attributes['width'].'px; width:'.$attributes['width'].'px; ';
+        $template->plotattrs .= 'width: '.$attributes['width'].',';
+        $template->htmlstyle .= ' min-width:'.$attributes['width'].'px; width:'.$attributes['width'].'px; ';
     }
 
-    $str = '
-    <div id="'.$htmlid.'" class="'.$class.'" style="'.$htmlstyle.'"></div>
-    <script type="text/javascript">
-    $.jqplot.config.enablePlugins = true;
+    $template->jsondata = json_encode($data);
 
-    var data'.$htmlid.' = '.json_encode($data).';
-
-    var plot'.$plotid.' = $.jqplot(\''.$htmlid.'\', [data'.$htmlid.'], {
-        '.$attrs.'
-        seriesDefaults: {
-            // make this a donut chart.
-            renderer:$.jqplot.DonutRenderer,
-            rendererOptions:{
-                // Donut\'s can be cut into slices like pies.
-                sliceMargin: 3,
-                // Pies and donuts can start at any arbitrary angle.
-                startAngle: 90,
-                showDataLabels: true,
-                // By default, data labels show the percentage of the donut/pie.
-                // You can show the data \'value\' or data \'label\' instead.
-                dataLabels: \'label\',
-                // "totalLabel=true" uses the centre of the donut for the total amount
-                totalLabel: false
-            }
+    $template->customcolors = false;
+    if (!empty($config->donutrenderercolors)) {
+        $colors = explode(',', $config->donutrenderercolors);
+        $series = array();
+        foreach ($colors as &$color) {
+            $color = "'$color'";
         }
-    });
-    </script>
-    ';
+        $template->customcolors = implode(",", $colors);
+    }
 
     $plotid++;
-    return $str;
+    return $OUTPUT->render_from_template('local_vflibs/jqplotsimpledonut', $template);
 }

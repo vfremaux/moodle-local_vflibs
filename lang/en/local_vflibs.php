@@ -41,3 +41,8 @@ the original lib/tcpdf lib from definition collision. Read the REDME.txt file fo
 $string['configdocbaseurl_desc'] = 'Base url for the remote documentation source';
 $string['configdoccustomerid_desc'] = 'Customer key for document access authentication';
 $string['configdoccustomerpublickey_desc'] = 'A PEM public key for encrypting the documentation access token. It is given by the documentation provider.';
+
+$string['configdonutrenderercolors'] = 'JQPlot simple donut colors';
+$string['configdonutrenderercolors_desc'] = 'Give an HTML color codes list, coma separated.';
+$string['configjqplotshadows'] = 'JQPlot graph shadows';
+$string['configjqplotshadows_desc'] = 'If set, will put shadows on shapes and plit generators.';

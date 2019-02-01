@@ -1306,7 +1306,7 @@ class block_manager {
                     $url,
                     new pix_icon('help', $str, 'moodle', array('class' => 'iconsmall', 'title' => '')),
                     $str,
-                    array('class' => 'editing_help')
+                    array('class' => 'editing_help', 'target' => '_blank')
                 );
             }
         }

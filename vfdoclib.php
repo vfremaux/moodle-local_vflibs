@@ -49,16 +49,26 @@ function local_vflibs_doc_make_ticket() {
  * Computes a specific documentation links for a plugin.
  */
 function local_vflibs_make_doc_url($pluginname) {
-    global $SESSION;
+    global $SESSION, $CFG;
 
     $config = get_config('local_vflibs');
 
     if (empty($config->docbaseurl)) {
-        // No external doc configured.
         return null;
     }
 
-    $editorplugins = explode(',', @$config->editorplugins);
+    $editorplugins = array();
+    if (!empty($config->editorplugins)) {
+        $pluginlist = str_replace("\n", '', $config->editorplugins);
+        $pluginlist = str_replace(' ', '', $pluginlist);
+        $editorplugins = explode(',', $pluginlist);
+    } else {
+        if (!empty($CFG->integratorplugins)) {
+            $pluginlist = str_replace("\n", '', $CFG->integratorplugins);
+            $pluginlist = str_replace(' ', '', $pluginlist);
+            $editorplugins = explode(',', $CFG->integratorplugins);
+        }
+    }
 
     if (strpos($pluginname, '_') === false) {
         // Normalize name.

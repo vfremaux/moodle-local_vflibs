@@ -36,6 +36,7 @@ $string['configdonutrenderercolors'] = 'Couleurs du renderer de donuts';
 $string['helponblock'] = 'Guide d\'utilisation du bloc';
 $string['helponmodule'] = 'Guide d\'utilisation de l\'activité';
 $string['configjqplotshadows'] = 'Ombres des graphes JQPlot';
+$string['configeditorplugins'] = 'Catalogue de plugins pour documentation additionnelle';
 
 $string['configenablelocalpdf_desc'] = 'Active la version locale de TCPDF avec des polices et fonctionnalités en plus.
 Ceci nécessite de protéger la distribution standard. Plus d\'informations dans le fichier README.txt.';

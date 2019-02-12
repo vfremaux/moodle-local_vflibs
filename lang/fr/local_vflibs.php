@@ -41,29 +41,6 @@ $string['configeditorplugins'] = 'Catalogue de plugins pour documentation additi
 $string['configenablelocalpdf_desc'] = 'Active la version locale de TCPDF avec des polices et fonctionnalités en plus.
 Ceci nécessite de protéger la distribution standard. Plus d\'informations dans le fichier README.txt.';
 
-$string['configpdfgeneration'] = 'Paramètres de génération PDF';
-
-$string['configpdfenabled'] = 'Activer l\'édition PDF';
-$string['configpdfenabled_desc'] = 'Active la génération en PDF des factures et autres documents de la boutique';
-$string['configprintconfig'] = 'Configuration générale des documents';
-$string['configprintconfig_desc'] = 'Une structure sérialisée d\'attributs de positionnement et de rendu';
-$string['configdefaulttemplate'] = 'Modèle de document par défaut';
-$string['configdefaulttemplate_desc'] = 'Un modèle de document par défaut pour le plugin. Certains plugins pourront utiliser des modèles spécifiques.';
-$string['configdocborderimage'] = 'Image des bordures';
-$string['configdocborderimage_desc'] = 'Une image jpg ou png.';
-$string['configdocwatermarkimage'] = 'Image de Filigranne.';
-$string['configdocwatermarkimage_desc'] = 'Une image jpg ou png. Surveillez la taille et le définition de ces images pour ne pas . Clefs de configuration associées : watermarkx, watermarky; watermarkw et watermarkh.';
-$string['configdoclogoimage'] = 'Image de logo';
-$string['configdoclogoimage_desc'] = 'Une image jpg ou png. Clefs de configuration associées : logox, logoy; logow and logoh.';
-$string['configdocheaderimage'] = 'Image d\'en-tête';
-$string['configdocheaderimage_desc'] = 'Une image jpg ou png. Clefs de configuration associées : headerx, headery; headerw and headerh.';
-$string['configdocinnerheaderimage'] = 'En tête intérieure';
-$string['configdocinnerheaderimage_desc'] = 'Une image jpg ou png. Clefs de configuration associées : headerx, headery; headerw et headerh.';
-$string['configdocfooterimage'] = 'Pied de page';
-$string['configdocfooterimage_desc'] = 'Une image jpg ou png. Clefs de configuration associées : footerx, footery; footerw and footerh.';
-$string['configdocinnerfooterimage'] = 'Pied de page intérieur';
-$string['configdocinnerfooterimage_desc'] = 'Une image jpg ou png. Clefs de configuration associées : footerx, footery; footerw and footerh.';
-
 $string['configdocbaseurl_desc'] = 'Url de base du volume de documentation source.';
 
 $string['configdoccustomerid_desc'] = 'Identifiant d\'abonné à la documentation';

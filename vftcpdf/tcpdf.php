@@ -515,13 +515,14 @@ class VFTCPDF extends TCPDF {
         if (isset($this->objects['qrcode']->w) && is_numeric($this->objects['qrcode']->w)) {
             $w = $this->objects['qrcode']->w;
         } else {
-            $w = 50;
+            $w = 35;
         }
         if (isset($this->objects['qrcode']->h) && is_numeric($this->objects['qrcode']->h)) {
             $h = $this->objects['qrcode']->h;
         } else {
-            $h = 50;
+            $h = 35;
         }
+
         $this->write2DBarcode(''.$codeurl, 'QRCODE,H', $x, $y, $w, $h, $style, 'N');
     }
 }

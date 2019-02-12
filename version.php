@@ -33,8 +33,4 @@ $plugin->component = 'local_vflibs';
 $plugin->maturity = MATURITY_STABLE;
 
 // Non moodle attributes.
-<<<<<<< HEAD
-$plugin->codeincrement = '3.5.0002';
-=======
 $plugin->codeincrement = '3.6.0002';
->>>>>>> MOODLE_36_STABLE

@@ -54,6 +54,7 @@ function local_vflibs_make_doc_url($pluginname) {
     $config = get_config('local_vflibs');
 
     if (empty($config->docbaseurl)) {
+        // No external doc configured.
         return null;
     }
 

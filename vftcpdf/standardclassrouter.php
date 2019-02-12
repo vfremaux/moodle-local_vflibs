@@ -1,5 +1,7 @@
 <?php
 
+if (!class_exists('pdf')) {
+
 /**
  * Wrapper class that extends TCPDF (lib/tcpdf/tcpdf.php).
  * Moodle customisations are done here.
@@ -102,4 +104,6 @@ class pdf extends TCPDF {
 
         return $families;
     }
+}
+
 }

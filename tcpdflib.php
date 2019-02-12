@@ -55,7 +55,7 @@ function tcpdf_get_path_from_hash($contenthash) {
 }
 
 
-function tcpdf_add_standard_plugin_settings(&$settings, $plugin) {
+function tcpdf_add_standard_plugin_settings(&$settings, $plugin, $defaultdocument = '') {
     $key = $plugin.'/pdfgeneration';
     $settings->add(new admin_setting_heading($key, get_string('configpdfgeneration', 'local_vflibs'), ''));
 
@@ -87,7 +87,7 @@ function tcpdf_add_standard_plugin_settings(&$settings, $plugin) {
     $key = $plugin.'/defaulttemplate';
     $label = get_string('configdefaulttemplate', 'local_vflibs');
     $desc = get_string('configdefaulttemplate_desc', 'local_vflibs');
-    $default = '';
+    $default = $defaultdocument;
     $settings->add(new admin_setting_configtextarea($key, $label, $desc, $default));
 
     /*
@@ -285,21 +285,6 @@ function tcpdf_print_image($pdf, $context, $component, $filearea, $itemid = 0, $
     }
 }
 
-function tcpdf_print_qrcode($pdf, $code, $targeturl, $x, $y) {
-    global $CFG;
-
-    $style = array(
-            'border' => 2,
-            'vpadding' => 'auto',
-            'hpadding' => 'auto',
-            'fgcolor' => array(0, 0, 0),
-            'bgcolor' => array(255, 255, 255), // False.
-            'module_width' => 1, // Width of a single module in points.
-            'module_height' => 1 // Height of a single module in points.
-    );
-
-    $pdf->write2DBarcode(''.$targeturl, 'QRCODE,H', $x, $y, 35, 35, $style, 'N');
-}
 
 /**
  * Retrieve path from local shop file hash

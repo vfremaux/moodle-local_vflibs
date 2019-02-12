@@ -114,7 +114,11 @@ function timeline_print_graph(&$theblock, $htmlid, $width, $height, &$data, $ret
            ";
     }
 
-    $xmlurl = $CFG->wwwroot.'/file.php/'.$COURSE->id.'/blockdata/dashboard/timelineevents/'.$htmlid.'_'.$USER->id.'.xml?uniqueid='.$genid;
+    $filename = $htmlid.'_'.$USER->id.'.xml';
+    $blockcontext = context_block::instance($thelbock->instance->id);
+    $xmlurl = moodle_url::make_pluginfile_url($blockcontext->id, 'block_'.$theblock->blockname, 'timelineevents', $theblock->instance->id, '/', $filename, true);
+    $xmlurl .= '&unique='.uniqid(); // Avoid caching.
+
     $str .= "
             tl = Timeline.create(document.getElementById(\"timeline_{$htmlid}\"), bandInfos);
             Timeline.loadXML(\"$xmlurl\", function(xml, url) { eventSource.loadXML(xml, url); });
@@ -149,19 +153,7 @@ function timeline_print_graph(&$theblock, $htmlid, $width, $height, &$data, $ret
 function timeline_generate_xml(&$theblock, $htmlid, &$data) {
     global $CFG, $COURSE, $USER;
 
-    if (!is_dir($CFG->dataroot.'/'.$COURSE->id.'/blockdata')) {
-        mkdir($CFG->dataroot.'/'.$COURSE->id.'/blockdata', 0777);
-    }
-
-    if (!is_dir($CFG->dataroot.'/'.$COURSE->id.'/blockdata/dashboard')) {
-        mkdir($CFG->dataroot.'/'.$COURSE->id.'/blockdata/dashboard', 0777);
-    }
-
-    if (!is_dir($CFG->dataroot.'/'.$COURSE->id.'/blockdata/dashboard/timelineevents')) {
-        mkdir($CFG->dataroot.'/'.$COURSE->id.'/blockdata/dashboard/timelineevents', 0777);
-    }
-
-    $tmpfile = $CFG->dataroot.'/'.$COURSE->id.'/blockdata/dashboard/timelineevents/'.$htmlid.'_'.$USER->id.'.xml';
+    $fs = get_file_storage();
 
     $tmp = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n\n";
     $tmp .= "<data>\n";
@@ -176,8 +168,6 @@ function timeline_generate_xml(&$theblock, $htmlid, &$data) {
     }
     array_walk($colorkeys, 'mytrim');
 
-    $basefileurl = $CFG->wwwroot.'/file.php/'.$COURSE->id.'/blockdata/dashboard/all/';
-    $basefilepath = $CFG->dataroot.'/'.$COURSE->id.'/blockdata/dashboard/all/';
     foreach ($data as $d) {
         $eventattrs = array();
         if (empty($d)) {
@@ -208,12 +198,16 @@ function timeline_generate_xml(&$theblock, $htmlid, &$data) {
         if (!empty($theblock->config->timelinecolorfield) && !empty($d->{$theblock->config->timelinecolorfield})) {
             if (array_key_exists($d->{$theblock->config->timelinecolorfield}, $colouring)) {
                 $eventattrs[] = "color=\"".$colouring[$d->{$theblock->config->timelinecolorfield}]."\"";
+
+                /*
                 if (file_exists($basefilepath.$d->{$theblock->config->timelinecolorfield}.".png")) {
                     $eventattrs[] = "icon=\"".$basefileurl.$d->{$theblock->config->timelinecolorfield}.".png\"";
                 }
+                */
             }
             $eventattrs[] = "textColor=\"#505050\"";
         }
+
         if (!empty($theblock->config->timelineeventdesc)) {
             $tmp .= '<event '.implode(' ', $eventattrs)." >";
             $tmp .= str_replace('&', '&amp;', $d->{$theblock->config->timelineeventtitle})."</event>\n";
@@ -221,9 +215,16 @@ function timeline_generate_xml(&$theblock, $htmlid, &$data) {
     }
     $tmp .= "</data>\n";
 
-    $file = fopen($tmpfile, 'w');
-    fputs($file, $tmp);
-    fclose($file);
+    $filerec = new StdClass;
+    $blockcontext = context_block::instance($theblock->instance->id);
+    $filerec->contextid = $blockcontext->id;
+    $filerec->component = 'block_'.$theblock->instance->blockname;
+    $filerec->filearea = 'timelineevents';
+    $filerec->itemid = $theblock->instance->id;
+    $filerec->filepath = '/';
+    $filerec->filename = $htmlid.'_'.$USER->id.'.xml';
+
+    $fs->create_file_from_string($filerec, $tmp);
 }
 
 function timeline_date_convert($date, $theblock) {

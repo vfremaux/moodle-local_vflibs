@@ -75,3 +75,6 @@ $string['configdocfooterimage'] = 'Footer';
 $string['configdocfooterimage_desc'] = 'A jpg or png image. Transparency is NOT supported in tcpdf. Associated printconfigs : footerx, footery; footerw and footerh.';
 $string['configdocinnerfooterimage'] = 'Inner Footer';
 $string['configdocinnerfooterimage_desc'] = 'A jpg or png image. Transparency is NOT supported in tcpdf. Associated printconfigs : footerx, footery; footerw and footerh.';
+
+$string['toomanycoursestoshow'] = 'Too many courses to show. ({$a})';
+$string['toomanycoursesmatchsearch'] = 'Too many courses match the search "{$a->search}". ({$a->count})';

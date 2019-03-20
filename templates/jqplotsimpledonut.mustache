@@ -19,13 +19,14 @@
                 // Donut's can be cut into slices like pies.
                 sliceMargin: 3,
                 // Pies and donuts can start at any arbitrary angle.
-                startAngle: 90,
+                startAngle: -90,
                 {{#customcolors}}
                 seriesColors: [
                     {{{customcolors}}}
                 ],
                 {{/customcolors}}
                 showDataLabels: true,
+                dataLabelNudge: 10,
                 // By default, data labels show the percentage of the donut/pie.
                 // You can show the data 'value' or data 'label' instead.
                 dataLabels: 'label',

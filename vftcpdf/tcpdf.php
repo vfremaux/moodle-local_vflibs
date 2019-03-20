@@ -485,8 +485,8 @@ class VFTCPDF extends TCPDF {
         $this->SetAlpha(1);
         $x = $this->objects[$objname]->x;
         $y = $this->objects[$objname]->y;
-        $w = $this->objects[$objname]->w;
-        $h = $this->objects[$objname]->h;
+        $w = @$this->objects[$objname]->w;
+        $h = @$this->objects[$objname]->h;
 
         $filepathname = $this->objects[$objname]->image->get_contenthash();
         $uploadpath = tcpdf_path_from_hash($filepathname).'/'.$filepathname;

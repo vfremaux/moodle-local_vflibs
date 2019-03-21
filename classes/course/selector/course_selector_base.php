@@ -660,7 +660,7 @@ abstract class course_selector_base {
     }
 
     /**
-     * @param boolean $optiontracker if true, initialise JavaScript for updating the user prefs.
+     * @param boolean $optiontracker if true, initialise JavaScript for updating the course prefs.
      * @return any HTML needed here.
      */
     protected function initialise_javascript($search) {
@@ -670,7 +670,7 @@ abstract class course_selector_base {
         // Put the options into the session, to allow search.php to respond to the ajax requests.
         $options = $this->get_options();
         $hash = md5(serialize($options));
-        $USER->userselectors[$hash] = $options;
+        $USER->courseselectors[$hash] = $options;
 
         // Initialise the selector.
         $params = array($this->name, $hash, $this->extrafields, $search);
@@ -739,14 +739,14 @@ function courses_search_sql($search, $c = 'c', $searchanywhere = true, array $ex
 
     // If we are being asked to exclude any users, do that.
     if (!empty($exclude)) {
-        list($coursetest, $courseparams) = $DB->get_in_or_equal($exclude, SQL_PARAMS_QM, 'ex', false);
+        list($coursetest, $courseparams) = $DB->get_in_or_equal($exclude, SQL_PARAMS_NAMED, 'ex', false);
         $tests[] = $c.'id '.$coursetest;
         $params = array_merge($params, $courseparams);
     }
 
     // If we are validating a set list of courseids, add an id IN (...) test.
     if (!empty($includeonly)) {
-        list($coursesql, $courseparams) = $DB->get_in_or_equal($includeonly, SQL_PARAMS_QM, 'val');
+        list($coursesql, $courseparams) = $DB->get_in_or_equal($includeonly, SQL_PARAMS_NAMED, 'val');
         $tests[] = $c.'id '.$coursesql;
         $params = array_merge($params, $courseparams);
     }

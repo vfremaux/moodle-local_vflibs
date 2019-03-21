@@ -107,21 +107,22 @@
  * @version 6.2.26
  */
 
+if (!class_exists('TCPDF')) {
+
 // TCPDF configuration
-require_once(dirname(__FILE__).'/tcpdf_autoconfig.php');
+include_once(dirname(__FILE__).'/tcpdf_autoconfig.php');
 // TCPDF static font methods and data
-require_once(dirname(__FILE__).'/include/tcpdf_font_data.php');
+include_once(dirname(__FILE__).'/include/tcpdf_font_data.php');
 // TCPDF static font methods and data
-require_once(dirname(__FILE__).'/include/tcpdf_fonts.php');
+include_once(dirname(__FILE__).'/include/tcpdf_fonts.php');
 // TCPDF static color methods and data
-require_once(dirname(__FILE__).'/include/tcpdf_colors.php');
+include_once(dirname(__FILE__).'/include/tcpdf_colors.php');
 // TCPDF static image methods and data
-require_once(dirname(__FILE__).'/include/tcpdf_images.php');
+include_once(dirname(__FILE__).'/include/tcpdf_images.php');
 // TCPDF static methods and data
-require_once(dirname(__FILE__).'/include/tcpdf_static.php');
+include_once(dirname(__FILE__).'/include/tcpdf_static.php');
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 /**
  * @class TCPDF
  * PHP class for generating PDF documents without requiring external extensions.
@@ -24513,3 +24514,5 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 //============================================================+
 // END OF FILE
 //============================================================+
+
+}

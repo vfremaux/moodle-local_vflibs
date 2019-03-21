@@ -285,6 +285,21 @@ function tcpdf_print_image($pdf, $context, $component, $filearea, $itemid = 0, $
     }
 }
 
+function tcpdf_print_qrcode($pdf, $code, $targeturl, $x, $y) {
+    global $CFG;
+
+    $style = array(
+            'border' => 2,
+            'vpadding' => 'auto',
+            'hpadding' => 'auto',
+            'fgcolor' => array(0, 0, 0),
+            'bgcolor' => array(255, 255, 255), // False.
+            'module_width' => 1, // Width of a single module in points.
+            'module_height' => 1 // Height of a single module in points.
+    );
+
+    $pdf->write2DBarcode(''.$targeturl, 'QRCODE,H', $x, $y, 35, 35, $style, 'N');
+}
 
 /**
  * Retrieve path from local shop file hash

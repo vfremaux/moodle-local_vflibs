@@ -25,22 +25,21 @@
 define('AJAX_SCRIPT', true);
 
 require_once('../../../../../config.php');
-require_once($CFG->dirroot . '/local/vflibs/classes/course/selector/lib.php');
+require_once($CFG->dirroot.'/local/vflibs/classes/course/selector/course_selector_base.php');
+
+// Get the search parameter.
+$search = required_param('search', PARAM_RAW);
+$selectorhash = required_param('selectorid', PARAM_ALPHANUM);
 
 $PAGE->set_context(context_system::instance());
-$PAGE->set_url('/local/vflibs/classes/course/selector/search.php');
-
-echo $OUTPUT->header();
+$params = array('search' => $search, 'selectorid' => $selectorhash);
+$PAGE->set_url(new moodle_url('/local/vflibs/classes/course/selector/search.php', $params));
 
 // Check access.
 require_login();
 require_sesskey();
 
-// Get the search parameter.
-$search = required_param('search', PARAM_RAW);
-
 // Get and validate the selectorid parameter.
-$selectorhash = required_param('selectorid', PARAM_ALPHANUM);
 if (!isset($USER->courseselectors[$selectorhash])) {
     print_error('unknowncourseselector');
 }
@@ -61,6 +60,7 @@ $courseselector = new $classname($name, $options);
 
 // Do the search and output the results.
 $results = $courseselector->find_courses($search);
+
 $json = array();
 foreach ($results as $groupname => $courses) {
     $groupdata = array('name' => $groupname, 'courses' => array());

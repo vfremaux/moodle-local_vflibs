@@ -465,7 +465,7 @@ function local_vflibs_jqplot_simple_donut($data, $htmlid, $class, $attributes = 
     $template->htmlid = $htmlid;
     $template->class = $class;
     $template->plotid = $plotid;
-    $template->shadowalpha = (empty($config->jqplotshadows)) ? 0 : 1;
+    $template->shadowalpha = (empty($config->jqplotshadows)) ? 0 : 0.7;
 
     $template->plotattrs = '';
     $template->htmlstyle = '';

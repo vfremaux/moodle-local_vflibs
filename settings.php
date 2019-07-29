@@ -85,4 +85,10 @@ block_o365_links,block_userquiz_monitor,block_userquiz_limits
     $desc = get_string('configjqplotshadows_desc', 'local_vflibs');
     $default = true; // default JQplot shadows.
     $settings->add(new admin_setting_configcheckbox($key, $label, $desc, $default));
+
+    $key = 'local_vflibs/googlemapsapikey';
+    $label = get_string('configgooglemapsapikey', 'local_vflibs');
+    $desc = get_string('configgooglemapsapikey_desc', 'local_vflibs');
+    $default = '';
+    $settings->add(new admin_setting_configtext($key, $label, $desc, $default));
 }

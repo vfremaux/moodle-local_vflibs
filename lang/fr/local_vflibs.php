@@ -56,6 +56,9 @@ $string['configdocheaderimage'] = 'Image d\'en-tête';
 $string['configdocinnerheaderimage'] = 'En tête intérieure';
 $string['configdocfooterimage'] = 'Pied de page';
 $string['configdocinnerfooterimage'] = 'Pied de page intérieur';
+$string['configgooglemapsapikey'] = 'Clef d\'API Google Maps';
+$string['configgooglemapsapikey_desc'] = 'Google Maps n\'est plus un service gratuit. Vous devez sourcrire un contrat de sevice de données applicatives pour utiliser les cartes Google.';
+$string['missinggooglekey'] = 'Vous n\'avez pas entré de clef d\'API Google. Voir la documentation https://developers.google.com/maps/documentation/javascript/get-api-key';
 
 $string['toomanycoursestoshow'] = 'Il y a trop de cours possibles. ({$a})';
 $string['toomanycoursesmatchsearch'] = 'Trop de cours répondent au critère "{$a->search}". ({$a->count})';

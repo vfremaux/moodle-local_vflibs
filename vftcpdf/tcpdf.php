@@ -199,7 +199,7 @@ class VFTCPDF extends TCPDF {
             }
 
             $this->setBaseX($x);
-            $this->setBaseY($x);
+            $this->setBaseY($y);
 
             // Some standard graphic objects.
             $wmark = new StdClass;
@@ -287,6 +287,7 @@ class VFTCPDF extends TCPDF {
                 $file = array_pop($files);
                 $footer->image = $file;
             }
+
             $this->addCustomObject('footer', $footer);
 
             $innerfooter = clone($footer);
@@ -434,8 +435,10 @@ class VFTCPDF extends TCPDF {
 
             // Uploaded path will superseed.
             if (file_exists($uploadpath)) {
-                $this->setY( - $this->basex - $obj->h);
+                // $this->setY( - $this->basex - $obj->h);
+                $this->setY($obj->y);
                 $this->Image($uploadpath, $this->basex, '', $obj->w, $obj->h);
+                $this->setY($obj->y + 10);
             }
             $this->SetFont('helvetica', 'I', 8);
             $this->setX($this->basex + 10);

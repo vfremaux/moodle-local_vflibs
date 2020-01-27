@@ -33,6 +33,7 @@ $string['configdocbaseurl'] = 'Url de base de la documentation';
 $string['configdoccustomerid'] = 'ID d\'abonné à la documentation';
 $string['configdoccustomerpublickey'] = 'Clef publique de documentation';
 $string['configdonutrenderercolors'] = 'Couleurs du renderer de donuts';
+$string['completionpercent'] = 'Achèvement : {$a}%';
 $string['helponblock'] = 'Guide d\'utilisation du bloc';
 $string['helponmodule'] = 'Guide d\'utilisation de l\'activité';
 $string['configjqplotshadows'] = 'Ombres des graphes JQPlot';

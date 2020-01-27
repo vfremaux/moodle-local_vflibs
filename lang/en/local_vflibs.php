@@ -36,8 +36,12 @@ $string['configdocbaseurl'] = 'Documentation base url';
 $string['configdoccustomerid'] = 'Documentation customer id';
 $string['configdoccustomerpublickey'] = 'Documentation public key';
 $string['configeditorplugins'] = 'Editor plugins for extra documentation';
+$string['configgooglemapsapikey'] = 'Google Maps SKU API Key.';
+$string['configgooglemapsapikey_desc'] = 'Google maps are now only available on pay per use mode. You must subscribe to Google API services to use maps.';
+$string['completionpercent'] = 'Completion: {$a}%';
 $string['helponblock'] = 'Help on the block';
 $string['helponmodule'] = 'Help on the course module';
+$string['missinggooglekey'] = 'Your Google Maps API key is empty. You may subscribe for a key at Google. See documentation https://developers.google.com/maps/documentation/javascript/get-api-key';
 
 $string['configenablelocalpdf_desc'] = 'Enables the use of the locally modified tcpdf library. This needs protecting
 the original lib/tcpdf lib from definition collision. Read the REDME.txt file for more information.';

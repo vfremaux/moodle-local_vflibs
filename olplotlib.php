@@ -25,28 +25,28 @@ defined('MOODLE_INTERNAL') || die();
  * Implements a google maps API V3 wrapper for Moodle
  */
 
-function googlemaps_require_js($sensor = 'false') {
-    echo "<script type=\"text/javascript\" src=\"http://maps.googleapis.com/maps/api/js?sensor=$sensor\"></script>\n";
+function olmaps_require_js() {
+    echo "<script type=\"text/javascript\" src=\"https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js\"></script>\n";
 }
 
 function googlemaps_initialize() {
-    global $googlemaps;
+    global $olmaps;
 
     $str = '';
 
-    if (!empty($googlemaps)) {
-        foreach ($googlemaps as $gmap) {
-            $str .= "google_initialize_$gmap();\n";
+    if (!empty($olmaps)) {
+        foreach ($olmaps as $gmap) {
+            $str .= "ol_initialize_{$gmap}();\n";
         }
     }
 
     echo "<script type=\"text/javascript\">
-        function google_initialize_all(){
+        function ol_initialize_all(){
             {$str}
         }
 
-        document.body.onload = google_initialize_all;
-        google_initialize_all();
+        document.body.onload = ol_initialize_all;
+        ol_initialize_all();
     </script>\n";
 }
 
@@ -58,11 +58,11 @@ function googlemaps_initialize() {
  *             mapTypeId: google.maps.MapTypeId.ROADMAP
  *           };
  */
-function googlemaps_print_graph($htmlid, $lat, $lng, $width = 400, $height = 350, $options = array(), $data = null) {
-    global $googlemaps;
+function ol_print_graph($htmlid, $lat, $lng, $width = 400, $height = 350, $options = array(), $data = null) {
+    global $olmaps;
 
-    if (!isset($googlemaps)) {
-        $googlemaps = array();
+    if (!isset($olmaps)) {
+        $olmaps = array();
     }
 
     if (empty($lat)) {
@@ -72,22 +72,29 @@ function googlemaps_print_graph($htmlid, $lat, $lng, $width = 400, $height = 350
         $lng = '1.757813';
     }
 
-    $optionstr = json_encode($options);
-    $optionstr = preg_replace('/\"(google\.maps\.[^\s]*)\"/', "$1", $optionstr); // Remove quotes provided by php jsonisation.
-    $optionstr = str_replace('"latlng"', 'latlng', $optionstr); // Remove quotes provided by php jsonisation.
+    if (empty($options['zoom'])) {
+        $options['zoom'] = 7;
+    }
 
     $str = "\n
     <script type=\"text/javascript\">
-        function google_initialize_{$htmlid}(){
-            var latlng = new google.maps.LatLng({$lat}, {$lng});
-            var myOptions = $optionstr;
-            var map = new google.maps.Map(document.getElementById(\"{$htmlid}\"),
-                myOptions);
+        function ol_initialize_{$htmlid}() {
+            var map = new ol.Map({
+                target: 'map{$htmlid}',
+                layers: [
+                    new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                })],
+                view: new ol.View({
+                    center: ol.proj.fromLonLat([{{lng}}, {{lat}}]),
+                    zoom: {$options['zoom']}
+                })
+            });
         }
     </script>\n
     ";
 
-    $str .= "\n<div id=\"{$htmlid}\" style=\"width:{$width}px; height:{$height}px\"></div>";
+    $str .= "\n<div id=\"map{$htmlid}\" style=\"width:{$width}px; height:{$height}px\"></div>";
 
     $googlemaps[] = $htmlid;
 
@@ -128,18 +135,18 @@ function googlemaps_embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350
 }
 
 /**
- * get exact static geolocation from a human readable address
- * Note that google has changed its terms of service for all geographic data exploitation
- * and now needs a Google API key bound to a billing account.
+ * get exact static gelocation from a human readable address
+ * Important : note that this function is sensible to Google Terms
+ * of service definition, that is allowing a 2500 resolutions per day
+ * as free unregistered service, but needing a Premier service account
+ * to resolve a bigger amount per day.
  * @param string $region
  * @param string $address
  * @param string $postalcode
  * @param string $city
  * @param arrayref &$errors filled with google errors
  */
-function googlemaps_get_geolocation($region, $address, $postalcode, $city, &$errors) {
-
-    $config = get_config('local_vflibs');
+function olmaps_get_geolocation($region, $address, $postalcode, $city, &$errors) {
 
     $locationurlstring = 'region='.$region.'&address='.urlencode($address).','.urlencode($postalcode.' '.$city);
 
@@ -148,7 +155,7 @@ function googlemaps_get_geolocation($region, $address, $postalcode, $city, &$err
     }
 
     $uri = 'http://maps.google.fr/maps/api/geocode/json';
-    $querystring = 'key='.$config->googlemapsapikey.'&'.$locationurlstring;
+    $querystring = 'sensor=false&'.$locationurlstring;
 
     // Initialize with the target URL.
     $ch = curl_init($uri.'?'.$querystring);

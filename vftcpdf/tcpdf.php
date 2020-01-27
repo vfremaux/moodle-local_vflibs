@@ -1,6 +1,6 @@
 <?php
 //============================================================+
-// File name   : tcpdf.php
+// File name   : vftcpdf.php
 // Version     : 6.2.26
 // Begin       : 2002-08-03
 // Last Update : 2018-09-14

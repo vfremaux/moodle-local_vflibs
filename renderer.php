@@ -29,31 +29,36 @@ class local_vflibs_renderer extends plugin_renderer_base {
      */
     public function jqw_bargauge_simple($name, $data, $properties = null, $labels = array()) {
 
-        $str = '';
+        $properties = (object) $properties;
 
-        if (empty($properties['max'])) {
-            $properties['max'] = 100;
+        if (empty($properties->max)) {
+            $properties->max = 100;
         }
-        if (empty($properties['width'])) {
-            $properties['width'] = 500;
+        if (empty($properties->width)) {
+            $properties->width = 500;
         }
-        if (empty($properties['height'])) {
-            $properties['height'] = 500;
+        if (empty($properties->height)) {
+            $properties->height = 500;
         }
-        if (empty($properties['cropwidth'])) {
-            $properties['cropwidth'] = 300;
+        if (empty($properties->cropwidth)) {
+            $properties->cropwidth = 300;
         }
-        if (empty($properties['cropheight'])) {
-            $properties['cropheight'] = 300;
+        if (empty($properties->cropheight)) {
+            $properties->cropheight = 300;
         }
-        if (!empty($properties['crop'])) {
-            $properties['cropheight'] = 300;
-            $properties['cropwidth'] = $properties['crop'];
+        if (!empty($properties->crop)) {
+            $properties->cropheight = 300;
+            $properties->cropwidth = $properties->crop;
         }
-        if (empty($properties['animationduration'])) {
-            $properties['animationduration'] = 500;
+        if (empty($properties->animationduration)) {
+            $properties->animationduration = 500;
         }
 
+        $properties->value = $value;
+        $properties->name = $name;
+        $properties->datalist = implode(', ', $data);
+
+        /*
         $str .= '';
 
         $str .= '<script type="text/javascript">';
@@ -78,33 +83,37 @@ class local_vflibs_renderer extends plugin_renderer_base {
         $str .= '        });';
         $str .= '    });';
         $str .= '</script>';
+        */
 
-        $w = $properties['cropwidth'];
-        $h = $properties['cropheight'];
-        $l = round(($properties['cropwidth'] - $properties['width']) / 2);
-        $t = round(($properties['cropheight'] - $properties['height']) / 2);
-        $str .= '<div class="jqw-gauge-container" style="width:'.$w.'px;height:'.$h.'px;">';
-        $str .= '<div id="'.$name.'" style="overflow:hidden;position:relative;top:'.$t.'px;left:'.$l.'px"></div>';
-        $str .= '</div>';
+        $properties->w = $properties['cropwidth'];
+        $properties->h = $properties['cropheight'];
+        $properties->l = round(($properties->cropwidth - $properties->width) / 2);
+        $properties->t = round(($properties->cropheight - $properties->height) / 2);
 
-        return $str;
+        return $this->output->render_from_template('local_vflibs/jqxsimplegauge', $properties);
     }
 
     public function jqw_progress_bar($name, $value, $properties = array()) {
 
-        if (empty($properties['animation'])) {
-            $properties['animation'] = 0;
+        $properties = (object)$properties;
+
+        if (empty($properties->animation)) {
+            $properties->animation = 0;
         }
-        if (empty($properties['width'])) {
-            $properties['width'] = 150;
+        if (empty($properties->width)) {
+            $properties->width = 150;
         }
-        if (empty($properties['height'])) {
-            $properties['height'] = 24;
+        if (empty($properties->height)) {
+            $properties->height = 24;
         }
-        if (empty($properties['template'])) {
-            $properties['template'] = 'primary';
+        if (empty($properties->template)) {
+            $properties->template = 'primary';
         }
 
+        $properties->value = $value;
+        $properties->name = $name;
+
+        /*
         $str = '';
         $str .= '<script type="text/javascript">';
         $str .= '    $(document).ready(function ()';
@@ -117,9 +126,10 @@ class local_vflibs_renderer extends plugin_renderer_base {
         $str .= '           animationDuration: '.$properties['animation'].'});';
         $str .= '    });';
         $str .= '</script>';
-        $str .= '<div style="margin-top: 10px; overflow: hidden;" id="'.$name.'"></div>';
+        $str .= '<div style="margin-top: 10px; overflow: hidden;" id="'.$name.'" title="'.get_string('completionpercent', 'local_vflibs', $value).'"></div>';
+        */
 
-        return $str;
+        return $this->output->render_from_template('local_vflibs/jqxprogressbar', $properties);
     }
 
     /**
@@ -132,6 +142,8 @@ class local_vflibs_renderer extends plugin_renderer_base {
      */
     public function jqw_bulletchart($name, $properties, $ranges, $pointer, $target, $ticks = null) {
 
+        $properties = (object)$properties;
+
         if (is_null($ticks)) {
             $ticks = new Stdclass;
             $ticks->position = 'both';
@@ -139,25 +151,28 @@ class local_vflibs_renderer extends plugin_renderer_base {
             $ticks->size = 10;
         }
 
-        if (!isset($properties['barsize'])) {
-            $properties['barsize'] = 20;
+        if (!isset($properties->barsize)) {
+            $properties->barsize = 20;
         }
 
-        if (!isset($properties['bgcolor'])) {
-            $properties['bgcolor'] = '#e0e0e0';
+        if (!isset($properties->bgcolor)) {
+            $properties->bgcolor = '#e0e0e0';
         }
 
-        if (!isset($properties['bgopacity'])) {
-            $properties['bgopacity'] = 1;
+        if (!isset($properties->bgopacity)) {
+            $properties->bgopacity = 1;
         }
 
+        $properties->firstrange = true;
         if (empty($ranges)) {
             $ranges = array();
             $defaultrange = (object) array('start' => 0,
                                            'end' => 100,
-                                           'color' => $properties['bgcolor'],
-                                           'opacity' => $properties['bgopacity']);
-            $ranges[] = $defaultrange;
+                                           'color' => $properties->bgcolor,
+                                           'opacity' => $properties->bgopacity,
+                                           'firstrange' => $firstrange);
+            $properties->ranges[] = $defaultrange;
+            $firstrange = false;
         }
 
         if (empty($pointer)) {
@@ -167,6 +182,7 @@ class local_vflibs_renderer extends plugin_renderer_base {
             if (!isset($pointer->color)) {
                 $pointer->color = '#000000';
             }
+            $properties->pointer = $pointer;
         }
 
         if (empty($target)) {
@@ -176,12 +192,14 @@ class local_vflibs_renderer extends plugin_renderer_base {
             if (!isset($target->color)) {
                 $target->color = '#000000';
             }
+            $properties->target = $target;
         }
 
-        if (!array_key_exists('tooltip', $properties)) {
-            $properties['tooltip'] = 'true';
+        if (empty($properties->tooltip)) {
+            $properties->tooltip = 'true';
         }
 
+        /*
         $str = '';
 
         $str .= '<div id="jqxBulletChart'.$properties['id'].'" class="jqwidgets-bulletchart"></div>'."\n";
@@ -227,8 +245,9 @@ class local_vflibs_renderer extends plugin_renderer_base {
         $str .= '    });'."\n";
         $str .= '});'."\n";
         $str .= '</script>'."\n";
+        */
 
-        return $str;
+        return $this->output->render_from_template('local_vflibs/jqxbulletchart', $properties);
     }
 
     /**
@@ -244,22 +263,27 @@ class local_vflibs_renderer extends plugin_renderer_base {
             return '';
         }
 
-        if (empty($properties['direction'])) {
-            $properties['direction'] = 'vertical';
+        $properties = (object)$properties;
+
+        $properties->datalist = json_encode($data);
+        $properties->name = $name;
+
+        if (empty($properties->direction)) {
+            $properties->direction = 'vertical';
         }
 
-        if (empty($properties['xflip'])) {
-            $properties['xflip'] = 'false';
+        if (empty($properties->xflip)) {
+            $properties->xflip = 'false';
         }
 
-        if (empty($properties['yflip'])) {
-            $properties['yflip'] = 'false';
+        if (empty($properties->yflip)) {
+            $properties->yflip = 'false';
         }
 
         // Guess series from first record.
         $firstarr = (array)$data[0];
-        $series = array_keys($firstarr);
-        $xaxis = array_shift($series);
+        $properties->series = array_keys($firstarr);
+        $properties->xaxis = array_shift($series);
 
         // Get other series and convert to a jsonified string.
         $seriestack = array();
@@ -271,18 +295,19 @@ class local_vflibs_renderer extends plugin_renderer_base {
                 $seriestack[] = $serieobj;
             }
         }
-        $seriesarr = json_encode($seriestack);
+        $properties->seriesarr = json_encode($seriestack);
 
-        $padding = '{ left: 20, top: 5, right: 20, bottom: 5 }';
-        if (!empty($properties['padding'])) {
-            $padding = json_encode($properties['padding']);
+        $properties->padding = '{ left: 20, top: 5, right: 20, bottom: 5 }';
+        if (!empty($properties->padding)) {
+            $properties->padding = json_encode($properties->padding);
         }
 
-        $titlepadding = '{ left: 90, top: 0, right: 0, bottom: 10 }';
-        if (!empty($properties['titlepadding'])) {
-            $titlepadding = json_encode($properties['titlepadding']);
+        $properties->titlepadding = '{ left: 90, top: 0, right: 0, bottom: 10 }';
+        if (!empty($properties->titlepadding)) {
+            $properties->titlepadding = json_encode($properties->titlepadding);
         }
 
+        /*
         $str = '';
 
         $str .= '<center>';
@@ -339,8 +364,9 @@ class local_vflibs_renderer extends plugin_renderer_base {
             $(\'#jqxBarChart'.$properties['id'].'\').jqxChart(settings'.$properties['id'].');
         });';
         $str .= '</script>';
+        */
 
-        return $str;
+        return $this->output->render_from_template('local_vflibs/jqxbarchart', $properties);
     }
 
     /**
@@ -351,15 +377,20 @@ class local_vflibs_renderer extends plugin_renderer_base {
      */
     public function jqw_switchbutton($name, $value, $properties) {
 
-        $initial = ($value) ? 'true' : 'false';
-        if (empty($properties['width'])) {
-            $properties['width'] = 80;
+        $properties = (object) $properties;
+
+        $properties->name = $name;
+        $properties->value = $value;
+        $properties->initial = ($value) ? 'true' : 'false';
+        if (empty($properties->width)) {
+            $properties->width = 80;
         }
 
-        if (empty($properties['height'])) {
-            $properties['height'] = 30;
+        if (empty($properties->height)) {
+            $properties->height = 30;
         }
 
+        /*
         $str = '<div id="'.$name.'"></div>';
         $str .= '<script type="text/javascript">';
         $str .= '  $(document).ready(function () {';
@@ -374,7 +405,8 @@ class local_vflibs_renderer extends plugin_renderer_base {
         $str .= ' });';
         $str .= '});';
         $str .= '</script>';
+        */
 
-        return $str;
+        return $this->output->render_from_template('local_vflibs/jqxswitchbutton', $properties);
     }
 }

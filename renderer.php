@@ -35,60 +35,25 @@ class local_vflibs_renderer extends plugin_renderer_base {
             $properties->max = 100;
         }
         if (empty($properties->width)) {
-            $properties->width = 500;
+            $properties->width = '100%';
         }
         if (empty($properties->height)) {
-            $properties->height = 500;
+            $properties->height = '20';
+        } else {
+            $properties->height = (int) str_replace('pt', '', $properties->height);
         }
-        if (empty($properties->cropwidth)) {
-            $properties->cropwidth = 300;
+        if (empty($properties->top)) {
+            $properties->top = 0;
         }
-        if (empty($properties->cropheight)) {
-            $properties->cropheight = 300;
-        }
-        if (!empty($properties->crop)) {
-            $properties->cropheight = 300;
-            $properties->cropwidth = $properties->crop;
+        if (empty($properties->left)) {
+            $properties->left = 0;
         }
         if (empty($properties->animationduration)) {
             $properties->animationduration = 500;
         }
 
-        $properties->value = $value;
         $properties->name = $name;
         $properties->datalist = implode(', ', $data);
-
-        /*
-        $str .= '';
-
-        $str .= '<script type="text/javascript">';
-        $str .= '    $(document).ready(function ()';
-        $str .= '    {';
-        $str .= '        $(\'#'.$name.'\').jqxBarGauge({colorScheme: "scheme02", width: ';
-        $str .= $properties['width'].', height:' .$properties['height'].',';
-        if (array_key_exists('title', $properties)) {
-            $str .= '            title: { text: \''.$properties['title'].'\', ';
-        }
-        if (array_key_exists('subtitle', $properties)) {
-            $str .= '            subtitle: \''.$properties['subtitle'].'\') },';
-        }
-        $str .= '            values: ['.implode(', ', $data).'], max: '.$properties['max'].', tooltip: {';
-        $str .= '                visible: true, formatFunction: function (value)';
-        $str .= '                {';
-        $str .= '                    var realVal = parseInt(value);';
-        $str .= '                    return (realVal);';
-        $str .= '                },';
-        $str .= '            },';
-        $str .= '            animationDuration: '.$properties['animationduration'];
-        $str .= '        });';
-        $str .= '    });';
-        $str .= '</script>';
-        */
-
-        $properties->w = $properties['cropwidth'];
-        $properties->h = $properties['cropheight'];
-        $properties->l = round(($properties->cropwidth - $properties->width) / 2);
-        $properties->t = round(($properties->cropheight - $properties->height) / 2);
 
         return $this->output->render_from_template('local_vflibs/jqxsimplegauge', $properties);
     }

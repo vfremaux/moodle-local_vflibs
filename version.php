@@ -31,7 +31,7 @@ $plugin->requires = 2019051100;   // Requires this Moodle version.
 $plugin->component = 'local_vflibs';
 $plugin->release = '3.7.0 (Build 2018021005)';   // Release.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->supported = [37];
+// $plugin->supported = [37];
 
 // Non moodle attributes.
 $plugin->codeincrement = '3.7.0002';

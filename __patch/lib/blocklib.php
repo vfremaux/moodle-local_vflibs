@@ -1299,7 +1299,7 @@ class block_manager {
 
             if ($docurl) {
                 global $PAGE;
-                $PAGE->requires->js_call_amd('local/vflibs', 'init');
+                $PAGE->requires->js_call_amd('local_vflibs/docfix', 'init');
                 $str = get_string('helponblock', 'local_vflibs');
                 $url = new moodle_url('/local/vflibs/docwrap.php', array('url' => $docurl));
                 $controls[] = new action_menu_link_primary(

@@ -17,6 +17,8 @@ defined('MOODLE_INTERNAL') || die();
 
 $config = get_config('local_vflibs');
 
+require_once($CFG->dirroot.'/local/vflibs/lib.php');
+
 if (!class_exists('pdf')) {
 
 if (!class_exists('VFTCPDF')) {

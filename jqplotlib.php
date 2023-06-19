@@ -49,6 +49,9 @@ function local_vflibs_jqplot_timeline(&$data, $curveix) {
     $str = "line{$curveix} = ";
 
     foreach ($data as $datum) {
+        if (!isset($datum[$curveix])) {
+            debugging("missing index");
+        }
         $points[] = '[\''.$datum[0].'\','.$datum[$curveix].']';
     }
     $str .= '['.implode(',', $points).']';
@@ -248,7 +251,7 @@ function local_vflibs_jqplot_barline($name, &$data) {
 }
 
 /**
- * Prints a single serie for simple graphs.
+ * Prints a single data serie for simple graphs.
  *
  */
 function local_vflibs_jqplot_simplebarline($name, &$data) {
@@ -259,6 +262,14 @@ function local_vflibs_jqplot_simplebarline($name, &$data) {
     return $str;
 }
 
+/**
+ * prints a simple bargraph.
+ * @param arrayref &$data an associative array with one simple 'label' => value pairs.
+ * @param arrayref &$ticks an associative array with one simple 'label' => value pairs.
+ * @param string $title a text title.
+ * @param string $htmlid an html identifier seed. Will be appended with an automatic instance index.
+ * @param array $options some rendering options to inject in jqplot template, to override defaults.
+ */
 function local_vflibs_jqplot_print_simple_bargraph(&$data, &$ticks, $title, $htmlid, $options = array()) {
     global $plotid;
     static $instance = 0;
@@ -382,13 +393,13 @@ function local_vflibs_jqplot_print_timecurve_bars(&$data, $title, $htmlid, $labe
 
     $title = addslashes($title);
 
-    // Make curves from each x, y pair and print them to Javscript.
-    $xserie = $data[0];
+    // Make curves from each x, y pair and print them to Javascript.
+    $xserie = $data[0]; // date stamps.
     $varset = array();
     for ($i = 1; $i < count($data); $i++) {
         // Process a single serie.
         $yserie = $data[$i];
-        $curvedata = array();
+        $curvedata = [];
         $xcount = count($xserie);
         for ($j = 0; $j < $xcount; $j++) {
             $curvedata[$j][0] = $xserie[$j];
@@ -451,6 +462,9 @@ function local_vflibs_jqplot_print_timecurve_bars(&$data, $title, $htmlid, $labe
     return $str;
 }
 
+/**
+ * Prints a donut from a simple serie of label => value data.
+ */
 function local_vflibs_jqplot_simple_donut($data, $htmlid, $class, $attributes = null) {
     global $plotid, $OUTPUT;
 
@@ -465,7 +479,7 @@ function local_vflibs_jqplot_simple_donut($data, $htmlid, $class, $attributes = 
     $template->htmlid = $htmlid;
     $template->class = $class;
     $template->plotid = $plotid;
-    $template->shadowalpha = (empty($config->jqplotshadows)) ? 0 : 0.7;
+    $template->shadowalpha = (empty($config->jqplotshadows)) ? 0 : 0.2;
 
     $template->plotattrs = '';
     $template->htmlstyle = '';
@@ -479,18 +493,88 @@ function local_vflibs_jqplot_simple_donut($data, $htmlid, $class, $attributes = 
         $template->htmlstyle .= ' min-width:'.$attributes['width'].'px; width:'.$attributes['width'].'px; ';
     }
 
-    $template->jsondata = json_encode($data);
+    if (array_key_exists('diameter', $attributes)) {
+        $template->diameter = $attributes['diameter'];
+    } else {
+        $template->diameter = 100;
+    }
+
+    if (array_key_exists('thickness', $attributes)) {
+        $template->thickness = $attributes['thickness'];
+    } else {
+        $template->thickness = 10;
+    }
+
+    $template->location = 'w';
+    if (array_key_exists('legendlocation', $attributes)) {
+        if (!in_array($attributes['legendlocation'], ['w', 's', 'e', 'n'])) {
+            throw new coding_exception("Bad legend location value");
+        }
+        $template->legendlocation = $attributes['legendlocation'];
+    }
+
+    $template->jsondata = local_vflibs_json_encode_array($data);
+    $colornum = count($data);
 
     $template->customcolors = false;
+
+    $customcolors = [];
     if (!empty($config->donutrenderercolors)) {
-        $colors = explode(',', $config->donutrenderercolors);
-        $series = array();
-        foreach ($colors as &$color) {
-            $color = "'$color'";
-        }
-        $template->customcolors = implode(",", $colors);
+        $customcolors = explode(',', $config->donutrenderercolors);
     }
+
+    // Provide as many colors as input dimensions. Explicitely defined colors will superseede
+    // randomly generated colors. Attribute colors will superseed any other.
+    for ($i = 0; $i < $colornum; $i++) {
+        if (array_key_exists('colors', $attributes) && isset($attributes['colors'][$i])) {
+            $colors[] = $attributes['colors'][$i];
+        } else if (isset($customcolors[$i])) {
+            $colors[] = $customcolors[$i];
+        } else {
+            $colors[] = local_vflibs_generate_color();
+        }
+    }
+    $template->customcolors = "'".implode("','", $colors)."'";
 
     $plotid++;
     return $OUTPUT->render_from_template('local_vflibs/jqplotsimpledonut', $template);
+}
+
+/**
+ * Generates a color in full, dark or light tones.
+ */
+function local_vflibs_generate_color($tone = 'full') {
+    if ($tone == 'full') {
+        $red = rand(0, 255);
+        $green = rand(0, 255);
+        $blue = rand(0, 255);
+    } else if ($tone = 'dark') {
+        $red = rand(0, 127);
+        $green = rand(0, 127);
+        $blue = rand(0, 127);
+    } else {
+        $red = rand(128, 255);
+        $green = rand(128, 255);
+        $blue = rand(127, 255);
+    }
+
+    return '#'.dechex($red).dechex($green).dechex($blue);
+}
+
+/**
+ * fix many conversion issues from the standard php json_encode().
+ * $data must contain a simple associative array.
+ */
+function local_vflibs_json_encode_array($data) {
+    $str = '[';
+    $statements = [];
+    foreach ($data as $key => $value) {
+        if (is_numeric($value)) {
+            $statements[] = "['".$key."', ".$value."]";
+        } else {
+            $statements[] = "['".$key."', '".$value."']";
+        }
+    }
+    $str .= implode(',', $statements);
+    return $str.']';
 }

@@ -304,14 +304,14 @@ class TCPDF_IMAGES {
 				// read transparency info
 				$t = TCPDF_STATIC::rfread($f, $n);
 				if ($ct == 0) { // DeviceGray
-					$trns = array(ord($t[1]));
+					$trns = array(ord(substr($t, 1, 1)));
 				} elseif ($ct == 2) { // DeviceRGB
-					$trns = array(ord($t[1]), ord($t[3]), ord($t[5]));
+					$trns = array(ord(substr($t, 1, 1)), ord(substr($t, 3, 1)), ord(substr($t, 5, 1)));
 				} else { // Indexed
 					if ($n > 0) {
 						$trns = array();
 						for ($i = 0; $i < $n; ++ $i) {
-							$trns[] = ord($t{$i});
+							$trns[] = ord(substr($t, $i, 1));
 						}
 					}
 				}

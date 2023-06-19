@@ -77,7 +77,7 @@ block_o365_links,block_userquiz_monitor,block_userquiz_limits
     $key = 'local_vflibs/donutrenderercolors';
     $label = get_string('configdonutrenderercolors', 'local_vflibs');
     $desc = get_string('configdonutrenderercolors_desc', 'local_vflibs');
-    $default = '#ffaa00,#cceeee'; // default JQplot colors.
+    $default = '#00cc00,#66ff66,#ff6666,#ff0000'; // default JQplot colors.
     $settings->add(new admin_setting_configtext($key, $label, $desc, $default));
 
     $key = 'local_vflibs/jqplotshadows';

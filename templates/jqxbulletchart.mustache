@@ -12,7 +12,7 @@ $(document).ready(function () {
         title: "{{name}}",
         {{#desc}}description: "{{desc}}",{{/desc}}
 
-        ranges: [{{#ranges}}{{^firstrange}}{{{/firstrange}}
+        ranges: [{{#ranges}}{{^firstrange}}{{/firstrange}}
                 startValue: {{start}},
                 endValue: {{end}},
                 color: {{color}},

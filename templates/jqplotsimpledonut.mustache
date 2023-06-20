@@ -20,20 +20,28 @@
                 sliceMargin: 3,
                 // Pies and donuts can start at any arbitrary angle.
                 startAngle: -90,
+                padding: 10,
+                dataLabelPositionFactor: 1,
+                thickness: {{thickness}},
+                diameter: {{diameter}},
                 {{#customcolors}}
                 seriesColors: [
                     {{{customcolors}}}
                 ],
                 {{/customcolors}}
                 showDataLabels: true,
-                dataLabelNudge: 10,
+                dataLabelNudge: 30,
                 // By default, data labels show the percentage of the donut/pie.
                 // You can show the data 'value' or data 'label' instead.
-                dataLabels: 'label',
+                // dataLabels: 'label',
                 // "totalLabel=true" uses the centre of the donut for the total amount
                 totalLabel: false,
                 shadowAlpha: {{{shadowalpha}}}
             }
+        },
+        legend: {
+            show:true,
+            location: '{{legendlocation}}'
         },
         cursor: {
             show: false

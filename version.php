@@ -27,11 +27,15 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version  = 2018021005;   // The (date) version of this plugin.
+<<<<<<< HEAD
 $plugin->requires = 2019111200;   // Requires this Moodle version.
+=======
+$plugin->requires = 2022112801;   // Requires this Moodle version.
+>>>>>>> MOODLE_401_STABLE
 $plugin->component = 'local_vflibs';
-$plugin->release = '3.8.0 (Build 2018021005)';   // Release.
+$plugin->release = '4.1.0 (Build 2018021005)';   // Release.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->supported = [38];
+$plugin->supported = [401, 402];
 
 // Non moodle attributes.
-$plugin->codeincrement = '3.8.0002';
+$plugin->codeincrement = '4.1.0002';

@@ -14,3 +14,34 @@
     margin-top:30px;
 }
 
+/* Quickform ordered select */
+
+.orderedselect-options {
+    display:inline-block;
+    margin: 0 10px 0 10px;
+    padding: 3px;
+    font-size: 90%;
+    color: white;
+    background-color: #3f8dBd;
+}
+
+table.jqplot-table-legend {
+    position: absolute;
+}
+
+.jqplot-table-legend-swatch {
+    margin: 1px 10px 1px 1px;
+}
+
+.jqplot-donut-series.jqplot-data-label {
+    color: black;
+    font-size: 1rem;
+}
+
+/* graphjs takeover */
+.chart-table-data.local_vflibs {
+    position: relative;
+    background-color: #fff;
+    z-index: 3000;
+    border: 1px solid #ddd;
+}

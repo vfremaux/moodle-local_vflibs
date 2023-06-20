@@ -125,8 +125,9 @@ require_once($CFG->dirroot.'/local/vflibs//tcpdf/tcpdf.php');
 class VFTCPDF extends TCPDF {
 
     // ADDITIONS
-    protected $doc_format = '';
+    protected $doc_format = 'A4';
     protected $doc_orientation = 'P';
+    protected $image_scale = 2;
 
     /**
      * Drawing start base.
@@ -154,6 +155,8 @@ class VFTCPDF extends TCPDF {
      */
     public function init($printconfig) {
         global $CFG;
+
+        $this->setImageScale($this->image_scale);
 
         $config = get_config('local_vflibs');
         $fs = get_file_storage();

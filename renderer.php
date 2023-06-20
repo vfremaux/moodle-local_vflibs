@@ -58,33 +58,6 @@ class local_vflibs_renderer extends plugin_renderer_base {
         $properties->name = $name;
         $properties->datalist = implode(', ', $data);
 
-        /*
-        $str .= '';
-
-        $str .= '<script type="text/javascript">';
-        $str .= '    $(document).ready(function ()';
-        $str .= '    {';
-        $str .= '        $(\'#'.$name.'\').jqxBarGauge({colorScheme: "scheme02", width: ';
-        $str .= $properties['width'].', height:' .$properties['height'].',';
-        if (array_key_exists('title', $properties)) {
-            $str .= '            title: { text: \''.$properties['title'].'\', ';
-        }
-        if (array_key_exists('subtitle', $properties)) {
-            $str .= '            subtitle: \''.$properties['subtitle'].'\') },';
-        }
-        $str .= '            values: ['.implode(', ', $data).'], max: '.$properties['max'].', tooltip: {';
-        $str .= '                visible: true, formatFunction: function (value)';
-        $str .= '                {';
-        $str .= '                    var realVal = parseInt(value);';
-        $str .= '                    return (realVal);';
-        $str .= '                },';
-        $str .= '            },';
-        $str .= '            animationDuration: '.$properties['animationduration'];
-        $str .= '        });';
-        $str .= '    });';
-        $str .= '</script>';
-        */
-
         $properties->w = $properties['cropwidth'];
         $properties->h = $properties['cropheight'];
         $properties->l = round(($properties->cropwidth - $properties->width) / 2);
@@ -390,23 +363,59 @@ class local_vflibs_renderer extends plugin_renderer_base {
             $properties->height = 30;
         }
 
-        /*
-        $str = '<div id="'.$name.'"></div>';
-        $str .= '<script type="text/javascript">';
-        $str .= '  $(document).ready(function () {';
-        $str .= ' $(\'#'.$name.'\').jqxSwitchButton({ height: '.$properties['height'].', ';
-        $str .= 'width: '.$properties['width'].', checked: '.$initial.' }); ';
-
-        $str .= ' $(\'#'.$name.'\').on(\'checked\', function (event) {';
-        $str .= $properties['onchecked'];
-        $str .= ' });';
-        $str .= ' $(\'#'.$name.'\').on(\'unchecked\', function (event) {';
-        $str .= $properties['onunchecked'];
-        $str .= ' });';
-        $str .= '});';
-        $str .= '</script>';
-        */
-
         return $this->output->render_from_template('local_vflibs/jqxswitchbutton', $properties);
+    }
+
+    // Réimplement a wider version of chartjs.
+
+    /**
+     * Renders a bar chart.
+     *
+     * @param \core\chart_bar $chart The chart.
+     * @return string.
+     */
+    public function render_chart_bar(\local_vflibs\chart_bar $chart) {
+        return $this->render_chart($chart);
+    }
+
+    /**
+     * Renders a line chart.
+     *
+     * @param \core\chart_line $chart The chart.
+     * @return string.
+     */
+    public function render_chart_line(\local_vflibs\chart_line $chart) {
+        return $this->render_chart($chart);
+    }
+
+    /**
+     * Renders a pie chart.
+     *
+     * @param \core\chart_pie $chart The chart.
+     * @return string.
+     */
+    public function render_chart_pie(\local_vflibs\chart_pie $chart) {
+        return $this->render_chart($chart);
+    }
+
+    /**
+     * Renders a chart.
+     * Handles it proper uniqid. Fixing possible occurrence of MDL-75379
+     *
+     * @param \core\chart_base $chart The chart.
+     * @param bool $withtable Whether to include a data table with the chart.
+     * @return string.
+     */
+    public function render_chart(\core\chart_base $chart, $withtable = true) {
+
+        $localuniqid = uniqid();
+
+        $chartdata = json_encode($chart);
+
+        return $this->output->render_from_template('local_vflibs/chart', (object) [
+            'localuniqid' => $localuniqid,
+            'chartdata' => $chartdata,
+            'withtable' => $withtable
+        ]);
     }
 }

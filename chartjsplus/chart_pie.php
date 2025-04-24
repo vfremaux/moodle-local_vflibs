@@ -48,7 +48,7 @@ class chart_pie extends \core\chart_pie {
      *
      * @return array
      */
-    public function jsonSerialize() { // @codingStandardsIgnoreLine (CONTRIB-6469).
+    public function jsonSerialize() : array { // @codingStandardsIgnoreLine (CONTRIB-6469).
         $data = parent::jsonSerialize();
         $data['doughnut'] = $this->get_doughnut();
 
@@ -87,5 +87,11 @@ class chart_pie extends \core\chart_pie {
      */
     public function get_type() {
         return 'pie';
+    }
+
+    public function set_legend_options($opts) {
+        foreach ($opts as $k => $v) {
+            $this->options['legend'][$k] = $v;
+        }
     }
 }

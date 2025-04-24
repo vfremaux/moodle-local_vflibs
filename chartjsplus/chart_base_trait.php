@@ -47,4 +47,11 @@ trait chart_base_trait {
     public function add_option($key, $value) {
         $this->options[$key] = $value;
     }
+
+    public function get_option($key) {
+        if (array_key_exists($key, $this->options)) {
+            return $this->options[$key];
+        }
+        return null;
+    }
 }

@@ -25,8 +25,9 @@
         "chartdata": "null"
     }
 }}
+<!-- Chart data : {{{chartdata}}} -->
 <div class="chart-area" id="chart-area-{{localuniqid}}">
-    <div class="chart-image" role="presentation" aria-describedby="chart-table-data-{{localuniqid}}"></div>
+    <div class="chart-image" role="presentation" aria-describedby="chart-table-data-{{localuniqid}}" style="width: {{width}}px; height: {{height}}px"></div>
     <div class="chart-table {{^withtable}}accesshide{{/withtable}}">
         <p class="chart-table-expand">
             <a href="#" aria-controls="chart-table-data-{{localuniqid}}" role="button">

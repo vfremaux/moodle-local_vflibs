@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-if (!class_exists('pdf')) {
+if (!class_exists('local_pdf')) {
 
 /**
  * Wrapper class that extends TCPDF (lib/tcpdf/tcpdf.php).
@@ -24,7 +24,7 @@ if (!class_exists('pdf')) {
  * @copyright   Vy-Shane Sin Fat
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class pdf extends VFTCPDF {
+class local_pdf extends VFTCPDF {
 
     /**
      * Class constructor

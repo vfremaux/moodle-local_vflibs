@@ -143,10 +143,16 @@ class local_vflibs_renderer extends plugin_renderer_base {
                                            'end' => 100,
                                            'color' => $properties->bgcolor,
                                            'opacity' => $properties->bgopacity,
-                                           'firstrange' => $firstrange);
-            $properties->ranges[] = $defaultrange;
+                                           'firstrange' => $properties->firstrange);
+            $ranges[] = $defaultrange;
             $firstrange = false;
         }
+
+        $rangesarr = [];
+        foreach ($ranges as $range) {
+            $rangesarr[] = '{startValue: '.$range->start.', endValue: '.$range->end.', color: \''.$range->color.'\', opacity: '.$range->opacity.'}';
+        }
+        $properties->ranges = implode(', ', $rangesarr);
 
         if (empty($pointer)) {
             if (!isset($pointer->size)) {
@@ -415,7 +421,9 @@ class local_vflibs_renderer extends plugin_renderer_base {
         return $this->output->render_from_template('local_vflibs/chart', (object) [
             'localuniqid' => $localuniqid,
             'chartdata' => $chartdata,
-            'withtable' => $withtable
+            'withtable' => $withtable,
+            'width' => $chart->get_option('width'),
+            'height' => $chart->get_option('height'),
         ]);
     }
 }

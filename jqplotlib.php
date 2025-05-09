@@ -371,13 +371,13 @@ function local_vflibs_jqplot_print_simple_bargraph(&$data, &$ticks, $title, $htm
 /**
  * Prints a timelined curve.
  * Data is expected as an array of data series, each being an array with [date,value] pairs.
- * @param array &$data
+ * @param array $data
  * @param string $title the graph title
  * @param string $htmlid
  * @param array $labels an array of object of the series containing fields (color,label,lineWidth,showMarker)
  * @param string $ylabel the label of the value axis
  */
-function local_vflibs_jqplot_print_timecurve_bars(&$data, $title, $htmlid, $labels, $ylabel) {
+function local_vflibs_jqplot_print_timecurve_bars($data, $title, $htmlid, $labels, $ylabel) {
     global $plotid;
     static $instance = 0;
 
@@ -395,8 +395,8 @@ function local_vflibs_jqplot_print_timecurve_bars(&$data, $title, $htmlid, $labe
 
     // Make curves from each x, y pair and print them to Javascript.
     $xserie = $data[0]; // date stamps.
-    $varset = array();
-    for ($i = 1; $i < count($data); $i++) {
+    $varset = [];
+    for ($i = 1; $i < count($data) - 1; $i++) {
         // Process a single serie.
         $yserie = $data[$i];
         $curvedata = [];

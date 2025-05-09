@@ -134,6 +134,7 @@ class VFTCPDF extends TCPDF {
      */
     protected $basex = 10;
     protected $basey = 10;
+    protected $basew = 0;
 
     /**
      * An associative array of printable objects parameters.
@@ -191,9 +192,10 @@ class VFTCPDF extends TCPDF {
                 }
             }
 
-            $x = 10;
-            $y = 10;
+            $x = $this->basex;
+            $y = $this->basey;
 
+            // Replace base by margins.
             if (!empty($printconfig->marginx)) {
                 $x = $printconfig->marginx;
             }
@@ -203,6 +205,7 @@ class VFTCPDF extends TCPDF {
 
             $this->setBaseX($x);
             $this->setBaseY($y);
+            $this->setBaseW($this->getPageWidth() - (2 * $y) - 10);
 
             // Some standard graphic objects.
             $wmark = new StdClass;
@@ -232,6 +235,8 @@ class VFTCPDF extends TCPDF {
 
             $this->addCustomObject('wmark', $wmark);
 
+            // This is a default 'header' custom object, if not overriden after init.
+
             $header = new StdClass;
             $header->x = $this->basex;
             $header->y = $this->basey;
@@ -258,13 +263,17 @@ class VFTCPDF extends TCPDF {
             }
             $this->addCustomObject('header', $header);
 
+            // This is a default 'innerheader' custom object, if not overriden after init.
+
             $innerheader = clone($header);
             if (!$fs->is_area_empty($context->id, $printconfig->plugin, 'docinnerheader', 0)) {
-                $files = $fs->get_area_files($context->id, 'local_shop', 'docinnerheader', 0, 'filename', true);
+                $files = $fs->get_area_files($context->id, $printconfig->plugin, 'docinnerheader', 0, 'filename', true);
                 $file = array_pop($files);
                 $innerheader->image = $file;
                 $this->addCustomObject('innerheader', $innerheader);
             }
+
+            // This is a default 'footer' custom object, if not overriden after init.
 
             $footer = new StdClass;
             $footer->x = $this->basex;
@@ -360,8 +369,15 @@ class VFTCPDF extends TCPDF {
         $this->basey = $y;
     }
 
+    public function setBaseW($w) {
+        $this->basew = $w;
+    }
+
     public function getCustomObject($objectname) {
-        return $this->objects[$objectname];
+        if (array_key_exists($objectname, $this->objects)) {
+            return $this->objects[$objectname];
+        }
+        return null;
     }
 
     public function getBaseX() {
@@ -370,6 +386,10 @@ class VFTCPDF extends TCPDF {
 
     public function getBaseY() {
         return $this->basey;
+    }
+
+    public function getBaseW() {
+        return $this->basew;
     }
 
      //Page header
@@ -451,6 +471,9 @@ class VFTCPDF extends TCPDF {
         $this->renderWatermark();
     }
 
+    /**
+     * Renders a semi-opaque (light print) watermark if has been setup.
+     */
     public function renderWatermark() {
 
         if (empty($this->objects['wmark']->image)) {
@@ -481,14 +504,14 @@ class VFTCPDF extends TCPDF {
         $this->renderCustomObject('logo');
     }
 
-    public function renderCustomObject($objname) {
+    public function renderCustomObject($objname, $alpha = 1) {
 
         if (empty($this->objects[$objname]->image)) {
             return;
         }
 
         // Set alpha to semi-transparency.
-        $this->SetAlpha(1);
+        $this->SetAlpha($alpha);
         $x = $this->objects[$objname]->x;
         $y = $this->objects[$objname]->y;
         $w = @$this->objects[$objname]->w;
@@ -500,6 +523,9 @@ class VFTCPDF extends TCPDF {
         $this->Image($uploadpath, $x, $y, $w, $h);
     }
 
+    /** 
+     * Renders a QRCode object
+     */
     public function renderQRCode($codeurl) {
         if (empty($this->objects['qrcode'])) {
             return;
@@ -515,7 +541,7 @@ class VFTCPDF extends TCPDF {
                 'module_height' => 1 // Height of a single module in points.
         );
 
-        $this->SetAlpha(1);
+        $this->SetAlpha(1); // Full opaque.
         $x = $this->objects['qrcode']->x;
         $y = $this->objects['qrcode']->y;
         if (isset($this->objects['qrcode']->w) && is_numeric($this->objects['qrcode']->w)) {

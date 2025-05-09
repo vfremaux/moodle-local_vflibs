@@ -50,7 +50,7 @@ class chart_line extends \core\chart_line {
      *
      * @return array
      */
-    public function jsonSerialize() { // @codingStandardsIgnoreLine (CONTRIB-6469).
+    public function jsonSerialize() : array { // @codingStandardsIgnoreLine (CONTRIB-6469).
         $data = parent::jsonSerialize();
         $data['smooth'] = $this->get_smooth();
 

@@ -1,4 +1,5 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,11 +20,16 @@ $config = get_config('local_vflibs');
 
 require_once($CFG->dirroot.'/local/vflibs/lib.php');
 
-if (!class_exists('pdf')) {
+if (!class_exists('local_pdf')) {
 
 if (!class_exists('VFTCPDF')) {
     if (!empty($config->enablelocalpdf)) {
+        // debug_trace('Loading vfclassrouter', 0, '', 3);
+        // This overloads TCPDF class by VFTCPDF class wrapper.
         require_once($CFG->dirroot.'/local/vflibs/vftcpdf/tcpdf.php');
+
+        // this defines local_pdf as available class for all plugins who 
+        // knows it may exist.
         require_once($CFG->dirroot.'/local/vflibs/vftcpdf/vfclassrouter.php');
     } else {
         require_once($CFG->dirroot.'/lib/pdflib.php');
@@ -55,7 +61,6 @@ function tcpdf_get_path_from_hash($contenthash) {
     $l2 = $contenthash[2].$contenthash[3];
     return "$l1/$l2";
 }
-
 
 function tcpdf_add_standard_plugin_settings(&$settings, $plugin, $defaultdocument = '') {
     $key = $plugin.'/pdfgeneration';
@@ -159,7 +164,7 @@ function tcpdf_add_standard_plugin_settings(&$settings, $plugin, $defaultdocumen
  * @param int $size font size in points
  * @param string $text the text to print
  */
-function tcpdf_print_text($pdf, $x, $y, $align, $font = 'freeserif', $style, $size = 10, $text) {
+function tcpdf_print_text($pdf, $x, $y, $align, $font = 'freeserif', $style = '', $size = 10, $text = '') {
     $pdf->setFont($font, $style, $size);
     $pdf->SetXY($x, $y);
     $pdf->writeHTMLCell(0, 0, '', '', $text, 0, 0, 0, true, $align);
@@ -177,7 +182,7 @@ function tcpdf_print_text($pdf, $x, $y, $align, $font = 'freeserif', $style, $si
  * @param int $size font size in points
  * @param string $text the text to print
  */
-function tcpdf_print_textbox($pdf, $w, $x, $y, $align, $font = 'freeserif', $style, $size = 10, $text) {
+function tcpdf_print_textbox($pdf, $w, $x, $y, $align, $font = 'freeserif', $style = '', $size = 10, $text = '') {
     $pdf->setFont($font, $style, $size);
     $pdf->SetXY($x, $y);
     $pdf->writeHTMLCell($w, 0, '', '', $text, 0, 2, 0, true, $align);
@@ -264,7 +269,7 @@ function tcpdf_draw_frame_letter($pdf) {
  * @param int $w the width
  * @param int $h the height
  */
-function tcpdf_print_image($pdf, $context, $component, $filearea, $itemid = 0, $x, $y, $w, $h) {
+function tcpdf_print_image($pdf, $context, $component, $filearea, $itemid = 0, $x = 0, $y = 0, $w = 0, $h = 0) {
     global $CFG;
 
     $fs = get_file_storage();

@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->version  = 2025010305;   // The (date) version of this plugin.
 $plugin->requires = 2022112801;   // Requires this Moodle version.
 $plugin->component = 'local_vflibs';
-$plugin->release = '4.5.0 (Build 2018021005)';   // Release.
+$plugin->release = '4.5.0 (Build 2025010305)';   // Release.
 $plugin->maturity = MATURITY_STABLE;
 $plugin->supported = [401, 405];
 

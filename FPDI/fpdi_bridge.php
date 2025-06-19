@@ -75,7 +75,9 @@ class fpdi_bridge_tcpdf_trait
      */
     protected function _getxobjectdict()
     {
-        $out = parent::_getxobjectdict();
+        $class = get_parent_class();
+        $func = "$class::_getxobjectdict";
+        $out = $func();
         foreach ($this->_tpls as $tplIdx => $tpl) {
             $out .= sprintf('%s%d %d 0 R', $this->tplPrefix, $tplIdx, $tpl['n']);
         }

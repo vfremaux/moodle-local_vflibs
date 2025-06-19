@@ -4111,6 +4111,9 @@ class TCPDF {
             // SHY character will not be printed
             return (0);
         }
+        if (is_float($char)) {
+            throw new moodle_exception("Float char index $char ");
+        }
         if (isset($this->CurrentFont['cw'][$char])) {
             $w = $this->CurrentFont['cw'][$char];
         } elseif (isset($this->CurrentFont['dw'])) {
@@ -4826,6 +4829,13 @@ class TCPDF {
             $this->Image($opt['mk']['ix'], '', '', 0, 0, '', '', '', false, 300, '', false, false, 0, false, true);
         }
     }
+
+    /**
+     *
+     */
+     public function getPdfaMode() {
+        return $this->pdfa_mode;
+     }
 
     /**
      * Embedd the attached files.
@@ -6306,7 +6316,8 @@ class TCPDF {
         $chars = TCPDF_FONTS::UTF8StringToArray($s, $this->isunicode, $this->CurrentFont);
         // calculate maximum width for a single character on string
         $chrw = $this->GetArrStringWidth($chars, '', '', 0, true);
-        array_walk($chrw, array($this, 'getRawCharWidth'));
+        // FIX : length already in result.
+        // array_walk($chrw, array($this, 'getRawCharWidth'));
         $maxchwidth = max($chrw);
         // get array of chars
         $uchars = TCPDF_FONTS::UTF8ArrayToUniArray($chars, $this->isunicode);
@@ -13794,7 +13805,7 @@ class TCPDF {
      */
     protected function addExtGState($parms) {
         if ($this->pdfa_mode) {
-            // transparencies are not allowed in PDF/A mode
+            // Transparencies are not allowed in PDF/A mode
             return;
         }
         // check if this ExtGState already exist
@@ -13824,8 +13835,8 @@ class TCPDF {
      * @since 3.0.000 (2008-03-27)
      */
     protected function setExtGState($gs) {
-        if ($this->pdfa_mode OR ($this->state != 2)) {
-            // transparency is not allowed in PDF/A mode
+        if ($this->pdfa_mode || ($this->state != 2)) {
+            // Transparency is not allowed in PDF/A mode.
             return;
         }
         $this->_out(sprintf('/GS%d gs', $gs));

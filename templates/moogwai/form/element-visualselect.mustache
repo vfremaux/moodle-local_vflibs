@@ -1,0 +1,158 @@
+{{!
+    This file is part of moogwai - Private project
+}}
+{{!
+    @template core_form/element-select
+
+    Simple select form element template.
+
+    Context variables required for this template:
+    * id - Element id,
+    * nameraw - Raw Element name without '[]'
+    * name - Element name,
+    * label -  Element label,
+    * multiple - multi select?,
+    * checked - checked?,
+    * error - Is there an error associated with this element?,
+    * size - Element size,
+    * value - Element value,
+    * helpbutton - Helpbutton,
+    * hiddenlabel - Element hidden flag,
+    * frozen - Element frozen flag,
+    * hardfrozen - Element hard fronzen flag,
+    * extraclasses - Extra classes assocaited,
+    * type - Element type,
+    * attributes - Element attributes,
+    * options - [
+        {
+            text - Option text,
+            value - Option value,
+            selected - Selected?,
+            disabled - Disabled?,
+            optionattributes - Option attributes
+        }
+    ]
+
+    Example context (json):
+    {
+        "element": {
+            "id": "id_maildisplay",
+            "nameraw": "maildisplay",
+            "name": "maildisplay",
+            "label": null,
+            "multiple": null,
+            "checked": null,
+            "error": null,
+            "size": null,
+            "value": null,
+            "helpbutton": "",
+            "hiddenlabel": false,
+            "frozen": false,
+            "hardfrozen": false,
+            "extraclasses": null,
+            "type": "select",
+            "attributes": "",
+            "options": [
+                {
+                    "text": "Hidden",
+                    "value": 0,
+                    "selected": false,
+                    "disabled": false,
+                    "optionattributes": ""
+                },
+                {
+                    "text": "Visible to everyone",
+                    "value": 1,
+                    "selected": true,
+                    "disabled": false,
+                    "optionattributes": ""
+                },
+                {
+                    "text": "Allow only other course members to see my email address",
+                    "value": 2,
+                    "selected": false,
+                    "disabled": false,
+                    "optionattributes": ""
+                }
+            ]
+        }
+    }
+}}
+{{< core_form/element-template }}
+<!-- core_form/element-visualselect has_js -->
+    {{$element}}
+        {{#element.multiple}}
+            <input type="hidden" name="{{element.nameraw}}" value="_qf__force_multiselect_submission">
+        {{/element.multiple}}
+        <input type="hidden" id="{{element.id}}" name="{{element.name}}" value="{{element.value}}" class="visualhidden">
+        <div class="container" id="visualselect-options-{{element.id}}"
+            {{#error}}
+                autofocus aria-describedby="{{element.iderror}}"
+            {{/error}}
+            {{{element.attributes}}} >
+            {{#element.hasoptions}}
+            {{#element.optionrows}}
+            <div class="row">
+                {{#options}}
+                <div class="col visualselect-col">
+                    {{#imgurl}}
+                    <!-- given as imgurl -->
+                    <div data-selectid="{{element.id}}" data-value="{{value}}" class="visualselector" title="{{{text}}}">
+                        <img data-selectid="{{element.id}}" data-value="{{value}}"
+                        class="{{#selected}}selected{{/selected}} {{#disabled}}disabled{{/disabled}} {{#element.frozen}}frozen{{/element.frozen}}"
+                        {{{optionattributes}}} alt="{{{text}}}" src="{{imgurl}}">
+                    </div>
+                    {{/imgurl}}
+                    {{#img}}
+                    <!-- given as full html image tag, f.e. svg -->
+                    <div data-selectid="{{element.id}}" data-value="{{value}}" class="visualselector" title="{{{text}}}">
+                    {{{img}}}
+                    </div>
+                    {{/img}}
+                </div>
+                {{/options}}
+            </div>
+            {{/element.optionrows}}
+            {{/element.hasoptions}}
+            {{^element.hasoptions}}
+            <div class="row">
+                <div class="col visualselect-col no-options">
+                    {{{nooptions}}}
+                </div>
+            </div>
+            {{/element.hasoptions}}
+        </div>
+    {{/element}}
+<!-- /core_form/element-visualselect -->
+{{/ core_form/element-template }}
+{{#js}}
+require(['jquery'], function($) {
+
+    var visualselect = {
+
+        init: function() {
+            $('div.visualselector').bind('click', this.selectoption);
+
+            // Set initial value
+            $('input.visualhidden').each(function(ix, elm){
+                $('div.visualselector[data-selectid="'+elm.id+'"][data-value="'+elm.value+'"]').addClass('selected');
+            });
+
+        },
+
+        selectoption: function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            var that = $(this);
+            var id = that.attr('data-selectid');
+
+            $('input[id="'+id+'"]').val(that.attr('data-value'));
+            that.closest('.container').find('.selected').removeClass('selected');
+            that.addClass('selected');
+        }
+    };
+
+    visualselect.init();
+});
+{{/js}}
